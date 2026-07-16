@@ -1,0 +1,47 @@
+[
+  {
+    "id": "1",
+    "name": "Ethereum Foundation",
+    "logoUrl": "https://cryptologos.cc/logos/ethereum-eth-logo.png",
+    "website": "https://ethereum.org",
+    "type": "partner",
+    "tier": "gold",
+    "featured": true
+  },
+  {
+    "id": "2",
+    "name": "ConsenSys",
+    "logoUrl": "https://cryptologos.cc/logos/consensys-logo.png",
+    "website": "https://consensys.net",
+    "type": "partner",
+    "tier": "gold",
+    "featured": true
+  },
+  {
+    "id": "3",
+    "name": "Polygon Labs",
+    "logoUrl": "https://cryptologos.cc/logos/polygon-matic-logo.png",
+    "website": "https://polygon.technology",
+    "type": "sponsor",
+    "tier": "silver",
+    "featured": true
+  },
+  {
+    "id": "4",
+    "name": "a16z crypto",
+    "logoUrl": "https://www.a16zcrypto.com/images/meta-image.png",
+    "website": "https://a16zcrypto.com",
+    "type": "investor",
+    "tier": "gold",
+    "featured": true
+  },
+  {
+    "id": "5",
+    "name": "Arbitrum Foundation",
+    "logoUrl": "https://cryptologos.cc/logos/arbitrum-arb-logo.png",
+    "website": "https://arbitrum.foundation",
+    "type": "sponsor",
+    "tier": "bronze",
+    "featured": false
+  }
+]

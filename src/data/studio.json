@@ -1,0 +1,28 @@
+[
+  {
+    "id": "project-1",
+    "title": "Aethera AI Dashboard",
+    "client": "Aethera Protocol",
+    "description": "An AI-powered risk assessment and portfolio tracking dashboard designed for digital asset managers, offering real-time predictive analytics.",
+    "category": "AI Solutions",
+    "challenge": "Aethera needed to visualize high-frequency multi-chain data and predictive risk signals in a simplified, highly responsive interface for institutional users.",
+    "solution": "We designed an interactive dark-themed interface built on Next.js, featuring WebGL-powered data visualizer nodes, custom state management for real-time tickers, and responsive CSS grid architectures.",
+    "outcome": "Improved user onboarding speed by 40% and reduced page load latencies to sub-100ms under heavy streaming websocket loads.",
+    "technologies": ["React", "Next.js", "WebGL", "Node.js", "PostgreSQL"],
+    "image": "/assets/docs_info.jpg",
+    "featured": true
+  },
+  {
+    "id": "project-2",
+    "title": "Helios Multi-Chain Wallet",
+    "client": "Helios Labs",
+    "description": "A secure, smart contract-based mobile & web wallet focusing on account abstraction (ERC-4337) and simple social recoveries.",
+    "category": "Blockchain Development",
+    "challenge": "Helios wanted to make Web3 onboarding as simple as web2, eliminating the seed-phrase requirement without sacrificing security or self-custody.",
+    "solution": "We crafted a comprehensive visual brand identity, UI/UX flows for social login recovery, and implemented Solidity smart account structures with gas sponsorship mechanics.",
+    "outcome": "Successfully launched in Beta, securing 10k+ pre-registrations and processing 50k transactions on Arbitrum in the first week.",
+    "technologies": ["Solidity", "Rust", "Next.js", "Flutter", "ERC-4337"],
+    "image": "/assets/docs_info.jpg",
+    "featured": true
+  }
+]

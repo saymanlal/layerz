@@ -1,0 +1,62 @@
+[
+  {
+    "id": "prog-1",
+    "title": "Builder Program",
+    "tagline": "Learn by Building.",
+    "description": "A hands-on program where participants solve real-world problems, collaborate with peers, and ship practical projects with industry mentors.",
+    "status": "open",
+    "duration": "6 Weeks",
+    "features": [
+      "Project-based learning & team matching",
+      "Weekly mentor feedback sessions",
+      "Exclusive web3 & AI engineering workshops",
+      "Demo Day with startup accelerator leads",
+      "NFT-backed completion certificates"
+    ]
+  },
+  {
+    "id": "prog-2",
+    "title": "Campus Chapters",
+    "tagline": "Build Innovation on Your Campus.",
+    "description": "Lead a Layerz chapter at your university, organize local technical workshops, grow a builder community, and unlock global resources.",
+    "status": "applications open",
+    "duration": "1 Semester",
+    "features": [
+      "Leadership training and team support",
+      "Budget and swag for local events",
+      "Access to global speaker network",
+      "Fast-track internship referrals",
+      "Collaborations with other chapters"
+    ]
+  },
+  {
+    "id": "prog-3",
+    "title": "Hackathons",
+    "tagline": "Build Faster Together.",
+    "description": "Compete, collaborate, and turn ideas into working software prototypes during our 48-hour innovation challenges with cash prizes.",
+    "status": "upcoming",
+    "duration": "48 Hours",
+    "features": [
+      "Industry expert Office Hours",
+      "Interactive tech workshops before kickoff",
+      "Networking with top-tier startup founders",
+      "Over $10,000 in total builder grants",
+      "Post-hackathon project support"
+    ]
+  },
+  {
+    "id": "prog-4",
+    "title": "Startup Incubation",
+    "tagline": "From Idea to Startup.",
+    "description": "Supporting early-stage developer founders in validating their market, building a scalable architecture, and preparing for initial funding rounds.",
+    "status": "coming soon",
+    "duration": "3 Months",
+    "features": [
+      "Dedicated technical architect advising",
+      "Incorporation & compliance guidance",
+      "Pitch deck dry-runs with VCs",
+      "AWS/Vercel/OpenAI credits pool",
+      "Pre-seed capital access matchmaking"
+    ]
+  }
+]

@@ -1,0 +1,78 @@
+[
+  {
+    "id": "mem-1",
+    "name": "Jane Doe",
+    "email": "jane@layerz.xyz",
+    "role": "developer",
+    "github": "janedoe",
+    "twitter": "janedoe_dev",
+    "checkedIn": true,
+    "lastCheckIn": "2026-07-16T10:15:30Z",
+    "skills": ["Solidity", "React", "Next.js"],
+    "checkInHistory": [
+      {
+        "timestamp": "2026-07-16T10:15:30Z",
+        "location": "Layerz Hub (Toronto)"
+      },
+      {
+        "timestamp": "2026-07-15T09:00:00Z",
+        "location": "Layerz Hub (Toronto)"
+      }
+    ]
+  },
+  {
+    "id": "mem-2",
+    "name": "Arjun Patel",
+    "email": "arjun@layerz.xyz",
+    "role": "designer",
+    "github": "arjundesign",
+    "twitter": "arjun_pixels",
+    "checkedIn": false,
+    "lastCheckIn": "2026-07-14T14:22:10Z",
+    "skills": ["Figma", "Branding", "WebGL", "CSS Modules"],
+    "checkInHistory": [
+      {
+        "timestamp": "2026-07-14T14:22:10Z",
+        "location": "Layerz Studio, London"
+      }
+    ]
+  },
+  {
+    "id": "mem-3",
+    "name": "Sarah Chen",
+    "email": "sarah@layerz.xyz",
+    "role": "founder",
+    "github": "schen",
+    "twitter": "sarah_builds",
+    "checkedIn": true,
+    "lastCheckIn": "2026-07-16T12:05:00Z",
+    "skills": ["Product Strategy", "Go", "AI Engineering"],
+    "checkInHistory": [
+      {
+        "timestamp": "2026-07-16T12:05:00Z",
+        "location": "Layerz Hub, San Francisco"
+      },
+      {
+        "timestamp": "2026-07-12T09:30:00Z",
+        "location": "Layerz Hub, San Francisco"
+      }
+    ]
+  },
+  {
+    "id": "mem-4",
+    "name": "Marcus Aurelius",
+    "email": "marcus@layerz.xyz",
+    "role": "mentor",
+    "github": "marcaurel",
+    "twitter": "marcus_security",
+    "checkedIn": false,
+    "lastCheckIn": "2026-07-10T11:00:00Z",
+    "skills": ["Rust", "Smart Contracts", "Audit", "Cryptography"],
+    "checkInHistory": [
+      {
+        "timestamp": "2026-07-10T11:00:00Z",
+        "location": "Virtual Hub"
+      }
+    ]
+  }
+]

@@ -1,0 +1,54 @@
+[
+  {
+    "id": "rm-1",
+    "quarter": "Q1 2026",
+    "title": "Ecosystem Foundation",
+    "description": "Establish the initial Layerz Chapters across 10 top-tier universities globally. Launch the first Builder Program cohort with 100+ active participants. Release the first public research reports from Layerz Labs.",
+    "status": "completed",
+    "milestones": [
+      "Launch Layerz Portal and community registration",
+      "Establish 10 Campus Chapters",
+      "Enroll 120 developers in Builder Program #1",
+      "Publish AI Builder Playbook"
+    ]
+  },
+  {
+    "id": "rm-2",
+    "quarter": "Q2 2026",
+    "title": "Studio & Services Expansion",
+    "description": "Open Layerz Studio for early-stage startup branding and design consultancy. Launch AI automation solutions for businesses. Scale community events to 2,000+ members.",
+    "status": "current",
+    "milestones": [
+      "Open Studio consulting applications",
+      "Deliver 5 startup branding packages",
+      "Host first global AI-Web3 Hackathon",
+      "Achieve 2,000+ active Discord/Telegram members"
+    ]
+  },
+  {
+    "id": "rm-3",
+    "quarter": "Q3 2026",
+    "title": "Layerz Labs & Open Source Core",
+    "description": "Launch the Layerz open-source SDK and toolkits for developers. Host regional developer bootcamps in Toronto, San Francisco, and London. Roll out the checking in/out membership hub.",
+    "status": "upcoming",
+    "milestones": [
+      "Release Layerz Web3 UI Kit v1.0 (open source)",
+      "Deploy decentralized check-in gateway",
+      "Establish physical Hubs in SF & Toronto",
+      "Publish Blockchain Infrastructure Report"
+    ]
+  },
+  {
+    "id": "rm-4",
+    "quarter": "Q4 2026",
+    "title": "Layerz Ventures & Grants",
+    "description": "Initialize the Layerz micro-grants program to fund projects coming out of the Builder Program. Launch the Incubator cohort to help projects raise institutional capital.",
+    "status": "upcoming",
+    "milestones": [
+      "Secure initial seed-grant matching pool ($250k)",
+      "Accept 8 startups into Layerz Incubation Q4",
+      "Hold global Demo Day with top VC partners",
+      "Launch fellowship application system"
+    ]
+  }
+]

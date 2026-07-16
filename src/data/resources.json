@@ -1,0 +1,56 @@
+[
+  {
+    "id": "res-1",
+    "title": "AI Builder Playbook",
+    "category": "Artificial Intelligence",
+    "type": "playbook",
+    "description": "A comprehensive guide to integrating LLMs, vector search, and local agents into modern Next.js/Python applications.",
+    "downloadUrl": "/assets/docs_info.jpg",
+    "tags": ["AI", "Next.js", "Python", "Vercel"]
+  },
+  {
+    "id": "res-2",
+    "title": "Blockchain Fundamentals",
+    "category": "Blockchain & Web3",
+    "type": "guide",
+    "description": "Understand smart contracts, multi-chain gas optimization, and wallet connection architectures from first principles.",
+    "downloadUrl": "/assets/docs_info.jpg",
+    "tags": ["Web3", "Solidity", "Gas", "Ethereum"]
+  },
+  {
+    "id": "res-3",
+    "title": "Startup Validation Guide",
+    "category": "Startups",
+    "type": "guide",
+    "description": "A step-by-step workbook for validating startup ideas, building landing pages, and getting your first 100 users without code.",
+    "downloadUrl": "/assets/docs_info.jpg",
+    "tags": ["MVP", "Validation", "User Research", "No-code"]
+  },
+  {
+    "id": "res-4",
+    "title": "Design System Handbook",
+    "category": "Product Design",
+    "type": "report",
+    "description": "Learn how to structure design tokens, dark mode systems, and responsive typography hierarchies for web projects.",
+    "downloadUrl": "/assets/docs_info.jpg",
+    "tags": ["UX", "UI", "Tokens", "Figma"]
+  },
+  {
+    "id": "res-5",
+    "title": "Startup Pitch Deck Template",
+    "category": "Startups",
+    "type": "template",
+    "description": "The exact slides and structure used by Layerz Ventures to analyze early-stage startups and check for market fit.",
+    "downloadUrl": "/assets/docs_info.jpg",
+    "tags": ["Pitch Deck", "Funding", "VC"]
+  },
+  {
+    "id": "res-6",
+    "title": "Hackathon Toolkit",
+    "category": "Community",
+    "type": "toolkit",
+    "description": "A complete package containing event schedules, presentation templates, team-forming scripts, and rubric sheets.",
+    "downloadUrl": "/assets/docs_info.jpg",
+    "tags": ["Hackathon", "Event", "Community"]
+  }
+]

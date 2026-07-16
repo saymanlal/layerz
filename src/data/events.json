@@ -1,0 +1,62 @@
+[
+  {
+    "id": "event-1",
+    "title": "Layerz Builder Cohort #1 Demo Day",
+    "description": "Watch the top builder teams showcase their MVPs built during the intensive 6-week Layerz Builder cohort. Meet developers, designers, and web3 investors.",
+    "date": "2026-08-15",
+    "time": "18:00 - 21:00",
+    "location": "Layerz Hub (Toronto) & Virtual",
+    "lumaLink": "https://lu.ma/layerz-demoday-1",
+    "type": "upcoming",
+    "image": "/assets/docs_info.jpg",
+    "attendeesCount": 128,
+    "capacity": 200,
+    "sponsors": ["Ethereum Foundation", "Polygon Labs"],
+    "speakers": ["Alex Rivera (Labs Lead)", "Sarah Chen (Studio Design)"]
+  },
+  {
+    "id": "event-2",
+    "title": "AI & Web3 Innovation Hackathon",
+    "description": "A 48-hour builders event exploring the intersection of decentralized infrastructure and artificial intelligence agents. Over $10k in builder grants.",
+    "date": "2026-09-10",
+    "time": "09:00 (Fri) - 18:00 (Sun)",
+    "location": "Layerz Innovation Space, SF",
+    "lumaLink": "https://lu.ma/layerz-ai-web3-hack",
+    "type": "upcoming",
+    "image": "/assets/docs_info.jpg",
+    "attendeesCount": 245,
+    "capacity": 300,
+    "sponsors": ["ConsenSys", "a16z crypto"],
+    "speakers": ["Vitalik B. (Guest Speaker)", "Elena Rostova (AI Lead)"]
+  },
+  {
+    "id": "event-3",
+    "title": "Introduction to Smart Contract Auditing",
+    "description": "Learn the basics of Solidity security, common vulnerability vectors (reentrancy, overflow), and static analysis tools like Slither.",
+    "date": "2026-06-05",
+    "time": "17:00 - 19:30",
+    "location": "Virtual (Zoom)",
+    "lumaLink": "https://lu.ma/layerz-solidity-security",
+    "type": "past",
+    "image": "/assets/docs_info.jpg",
+    "attendeesCount": 180,
+    "capacity": 200,
+    "sponsors": ["Ethereum Foundation"],
+    "speakers": ["Marcus Aurel (Security Researcher)"]
+  },
+  {
+    "id": "event-4",
+    "title": "Web3 Design & UX Playbook Launch",
+    "description": "Unveiling the new UX standards for multi-chain dApps and smart account recovery flows. Panel discussion with web3 designers.",
+    "date": "2026-05-12",
+    "time": "18:30 - 20:30",
+    "location": "Layerz Studio, London",
+    "lumaLink": "https://lu.ma/layerz-design-playbook",
+    "type": "past",
+    "image": "/assets/docs_info.jpg",
+    "attendeesCount": 95,
+    "capacity": 100,
+    "sponsors": ["ConsenSys"],
+    "speakers": ["Sarah Chen (Studio Design)", "Daniel K. (UX Lead)"]
+  }
+]
