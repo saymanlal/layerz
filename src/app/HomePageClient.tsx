@@ -77,6 +77,12 @@ interface Point3D {
   meta?: Member | Project | Partner | Program;
 }
 
+interface ProjectedPoint3D extends Point3D {
+  px: number;
+  py: number;
+  depth: number;
+}
+
 interface CursorParticle {
   x: number;
   y: number;
@@ -460,7 +466,7 @@ export default function HomePageClient({
       const pts = pointsRef.current;
 
       // Morph coordinates position towards targets
-      const projected = pts.map((p) => {
+      const projected: ProjectedPoint3D[] = pts.map((p) => {
         p.x += (p.tx - p.x) * 0.05;
         p.y += (p.ty - p.y) * 0.05;
         p.z += (p.tz - p.z) * 0.05;
@@ -509,11 +515,11 @@ export default function HomePageClient({
       }
 
       // Check node cursor overlaps
-      let closestNode: Point3D | null = null;
+      let closestNode: ProjectedPoint3D | null = null;
       let minMouseDist = 20;
 
-      projected.forEach((p) => {
-        if (p.depth < -120) return;
+      for (const p of projected) {
+        if (p.depth < -120) continue;
 
         const isGenesis = p.type === "genesis";
         const dotSize = Math.max(1, p.size * (150 / (150 + p.depth)));
@@ -542,7 +548,7 @@ export default function HomePageClient({
           ctx.arc(p.px, p.py, dotSize * 2, 0, Math.PI * 2);
           ctx.stroke();
         }
-      });
+      }
 
       // Update hovered node coordinate
       mouseRef.current.hoveredNode = closestNode;
@@ -622,50 +628,60 @@ export default function HomePageClient({
             </button>
           </div>
 
-          {selectedItem.role ? (
-            // Member Node details
-            <div className="space-y-4">
-              <h4 className="font-black text-white text-base leading-tight">{selectedItem.name}</h4>
-              <p className="font-mono text-[9px] text-[#8B88F8]">{selectedItem.role}</p>
-              <div className="p-3 bg-black/40 rounded-lg border border-white/5 space-y-2 font-mono text-[8px] text-gray-400">
-                <span className="block border-b border-white/5 pb-1 text-white font-bold">CAPABILITIES</span>
-                <div className="flex flex-wrap gap-1">
-                  {selectedItem.skills.map((s: string) => (
-                    <span key={s} className="px-1.5 py-0.5 rounded bg-white/5 text-gray-300">#{s}</span>
-                  ))}
+          {(() => {
+            if ("role" in selectedItem) {
+              const member = selectedItem as Member;
+              return (
+                <div className="space-y-4">
+                  <h4 className="font-black text-white text-base leading-tight">{member.name}</h4>
+                  <p className="font-mono text-[9px] text-[#8B88F8]">{member.role}</p>
+                  <div className="p-3 bg-black/40 rounded-lg border border-white/5 space-y-2 font-mono text-[8px] text-gray-400">
+                    <span className="block border-b border-white/5 pb-1 text-white font-bold">CAPABILITIES</span>
+                    <div className="flex flex-wrap gap-1">
+                      {member.skills.map((s: string) => (
+                        <span key={s} className="px-1.5 py-0.5 rounded bg-white/5 text-gray-300">#{s}</span>
+                      ))}
+                    </div>
+                  </div>
                 </div>
-              </div>
-            </div>
-          ) : selectedItem.client ? (
-            // Project Node details
-            <div className="space-y-4">
-              <h4 className="font-black text-white text-base leading-tight">{selectedItem.title}</h4>
-              <p className="font-mono text-[9px] text-gray-500">Client: {selectedItem.client}</p>
-              <div className="space-y-2 text-xs text-gray-400">
-                <p><strong>Challenge:</strong> {selectedItem.challenge}</p>
-                <p><strong>Solution:</strong> {selectedItem.solution}</p>
-              </div>
-            </div>
-          ) : selectedItem.website ? (
-            // Partner Node details
-            <div className="space-y-4">
-              <h4 className="font-black text-white text-base leading-tight">{selectedItem.name}</h4>
-              <span className="px-2 py-0.5 rounded bg-[#8B88F8]/10 border border-[#8B88F8]/20 text-[#8B88F8] font-mono text-[8px] uppercase">{selectedItem.type}</span>
-              <a 
-                href={selectedItem.website} target="_blank" rel="noopener noreferrer"
-                className="block text-center py-2.5 bg-white text-black font-bold text-xs uppercase tracking-wider rounded-lg font-mono"
-              >
-                OPEN WEBSITE &rarr;
-              </a>
-            </div>
-          ) : (
-            // Program details
-            <div className="space-y-4">
-              <h4 className="font-black text-white text-base leading-tight">{selectedItem.title}</h4>
-              <p className="font-mono text-[9px] text-[#89F336]">{selectedItem.tagline}</p>
-              <p className="text-xs text-gray-400 leading-relaxed">{selectedItem.description}</p>
-            </div>
-          )}
+              );
+            } else if ("client" in selectedItem) {
+              const project = selectedItem as Project;
+              return (
+                <div className="space-y-4">
+                  <h4 className="font-black text-white text-base leading-tight">{project.title}</h4>
+                  <p className="font-mono text-[9px] text-gray-500">Client: {project.client}</p>
+                  <div className="space-y-2 text-xs text-gray-400">
+                    <p><strong>Challenge:</strong> {project.challenge}</p>
+                    <p><strong>Solution:</strong> {project.solution}</p>
+                  </div>
+                </div>
+              );
+            } else if ("website" in selectedItem) {
+              const partner = selectedItem as Partner;
+              return (
+                <div className="space-y-4">
+                  <h4 className="font-black text-white text-base leading-tight">{partner.name}</h4>
+                  <span className="px-2 py-0.5 rounded bg-[#8B88F8]/10 border border-[#8B88F8]/20 text-[#8B88F8] font-mono text-[8px] uppercase">{partner.type}</span>
+                  <a 
+                    href={partner.website} target="_blank" rel="noopener noreferrer"
+                    className="block text-center py-2.5 bg-white text-black font-bold text-xs uppercase tracking-wider rounded-lg font-mono"
+                  >
+                    OPEN WEBSITE &rarr;
+                  </a>
+                </div>
+              );
+            } else {
+              const program = selectedItem as Program;
+              return (
+                <div className="space-y-4">
+                  <h4 className="font-black text-white text-base leading-tight">{program.title}</h4>
+                  <p className="font-mono text-[9px] text-[#89F336]">{program.tagline}</p>
+                  <p className="text-xs text-gray-400 leading-relaxed">{program.description}</p>
+                </div>
+              );
+            }
+          })()}
         </div>
       )}
 

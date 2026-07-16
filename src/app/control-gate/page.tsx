@@ -90,7 +90,7 @@ interface Resource {
   type: string;
 }
 
-type EcosystemItem = Event | Blog | Quarter | Program | Project | Member | Partner | Resource;
+type EcosystemItem = Partial<Event> & Partial<Blog> & Partial<Quarter> & Partial<Program> & Partial<Project> & Partial<Member> & Partial<Partner> & Partial<Resource>;
 
 export default function AdminPortal() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
