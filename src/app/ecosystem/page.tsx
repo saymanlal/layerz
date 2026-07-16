@@ -109,7 +109,7 @@ export default function EcosystemPage() {
         <span className="text-xs font-bold uppercase tracking-wider text-[#8B88F8] block mb-2">Our Philosophy</span>
         <h2 className="text-3xl font-extrabold tracking-tight text-[#111111] mb-6">Every Layer Strengthens the Next.</h2>
         <p className="text-base text-[#5C5C5C] leading-relaxed max-w-2xl mx-auto">
-          Innovation doesn't happen in isolation. A student becomes a developer. A developer builds a product. A product becomes a startup. A startup creates opportunities for others. Layerz connects every stage of that journey.
+          Innovation doesn&apos;t happen in isolation. A student becomes a developer. A developer builds a product. A product becomes a startup. A startup creates opportunities for others. Layerz connects every stage of that journey.
         </p>
       </section>
 
@@ -243,7 +243,7 @@ export default function EcosystemPage() {
           <div className="absolute right-0 bottom-0 w-32 h-32 bg-[#89F336]/10 rounded-full blur-2xl"></div>
           <h3 className="text-2xl md:text-3xl font-extrabold text-[#111111] mb-4">Ready to Become Part of the Ecosystem?</h3>
           <p className="text-sm text-[#5C5C5C] max-w-xl mx-auto mb-8">
-            Whether you're here to learn, build, design, research, or launch your next startup, there's a place for you.
+            Whether you&apos;re here to learn, build, design, research, or launch your next startup, there&apos;s a place for you.
           </p>
           <div className="flex flex-col sm:flex-row justify-center gap-4">
             <Link href="/join" className="btn-primary px-8 py-3.5 rounded-lg text-xs font-bold uppercase tracking-wider text-center">

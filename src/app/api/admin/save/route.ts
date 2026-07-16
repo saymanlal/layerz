@@ -35,8 +35,9 @@ export async function POST(request: Request) {
         }
         fs.writeFileSync(fullLocalPath, content, "utf8");
         localWriteSuccess = true;
-      } catch (err: any) {
-        console.error("Local file system write failed:", err);
+      } catch (err: unknown) {
+        const errMsg = err instanceof Error ? err.message : "Unknown local write error";
+        console.error("Local file system write failed:", errMsg);
       }
     }
 
@@ -111,8 +112,8 @@ export async function POST(request: Request) {
           const putErr = await putRes.json();
           githubErrorMsg = putErr.message || "Failed to push to GitHub";
         }
-      } catch (err: any) {
-        githubErrorMsg = err.message || "GitHub API connection error";
+      } catch (err: unknown) {
+        githubErrorMsg = err instanceof Error ? err.message : "GitHub API connection error";
       }
     }
 
@@ -146,7 +147,8 @@ export async function POST(request: Request) {
       error: "No GitHub credentials configured. Please set GITHUB_PAT and GITHUB_REPO."
     }, { status: 400 });
 
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message || "Internal Server Error" }, { status: 500 });
+  } catch (error: unknown) {
+    const errorMsg = error instanceof Error ? error.message : "Internal Server Error";
+    return NextResponse.json({ error: errorMsg }, { status: 500 });
   }
 }

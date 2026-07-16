@@ -11,7 +11,7 @@ export async function GET() {
     }
 
     return NextResponse.json({ authenticated: false }, { status: 401 });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ authenticated: false }, { status: 500 });
   }
 }
@@ -21,7 +21,7 @@ export async function DELETE() {
     const cookieStore = await cookies();
     cookieStore.delete("layerz_session");
     return NextResponse.json({ success: true, message: "Logged out successfully" });
-  } catch (error) {
+  } catch {
     return NextResponse.json({ success: false }, { status: 500 });
   }
 }

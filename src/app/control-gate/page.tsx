@@ -90,6 +90,8 @@ interface Resource {
   type: string;
 }
 
+type EcosystemItem = Event | Blog | Quarter | Program | Project | Member | Partner | Resource;
+
 export default function AdminPortal() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [email, setEmail] = useState("");
@@ -100,7 +102,7 @@ export default function AdminPortal() {
   
   // Data State
   const [activeFile, setActiveFile] = useState<string>("events.json");
-  const [fileData, setFileData] = useState<any[]>([]);
+  const [fileData, setFileData] = useState<EcosystemItem[]>([]);
   const [rawJsonText, setRawJsonText] = useState("");
   const [isEditingRaw, setIsEditingRaw] = useState(false);
   
@@ -124,6 +126,39 @@ export default function AdminPortal() {
     message?: string;
   }>({ loading: false });
 
+  const loadFileData = async (fileName: string) => {
+    setSaveStatus({ loading: true, message: `Retrieving ${fileName}...` });
+    try {
+      const response = await fetch(`/api/admin/data?file=${fileName}`);
+      if (response.status === 200) {
+        const json = await response.json() as EcosystemItem[];
+        setFileData(json);
+        setRawJsonText(JSON.stringify(json, null, 2));
+        setSaveStatus({ loading: false });
+      } else {
+        const fallbackRes = await fetch(`/api/admin/data?file=${fileName}&local=true`);
+        if (fallbackRes.status === 200) {
+          const json = await fallbackRes.json() as EcosystemItem[];
+          setFileData(json);
+          setRawJsonText(JSON.stringify(json, null, 2));
+          setSaveStatus({ loading: false });
+        } else {
+          setSaveStatus({
+            loading: false,
+            success: false,
+            message: `Could not retrieve ${fileName}. Verify credentials on Server.`
+          });
+        }
+      }
+    } catch {
+      setSaveStatus({
+        loading: false,
+        success: false,
+        message: "Failed to connect to data endpoint."
+      });
+    }
+  };
+
   // Load status of session
   useEffect(() => {
     async function checkSession() {
@@ -136,11 +171,12 @@ export default function AdminPortal() {
             loadFileData(activeFile);
           }
         }
-      } catch (err) {
-        console.error("Session verification failed:", err);
+      } catch {
+        console.error("Session verification failed");
       }
     }
     checkSession();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const handleLogin = async (e: React.FormEvent) => {
@@ -165,7 +201,7 @@ export default function AdminPortal() {
       } else {
         setAuthError(data.error || "Authentication failed.");
       }
-    } catch (err) {
+    } catch {
       setAuthError("Failed to connect to authentication API.");
     } finally {
       setAuthLoading(false);
@@ -175,8 +211,8 @@ export default function AdminPortal() {
   const handleLogout = async () => {
     try {
       await fetch("/api/admin/auth/status", { method: "DELETE" });
-    } catch (err) {
-      console.error("Logout request failed:", err);
+    } catch {
+      console.error("Logout request failed");
     }
     setIsAuthenticated(false);
     setEmail("");
@@ -185,68 +221,12 @@ export default function AdminPortal() {
     setRawJsonText("");
   };
 
-  const loadFileData = async (fileName: string) => {
-    setSaveStatus({ loading: true, message: `Retrieving ${fileName}...` });
-    try {
-      const repo = "saymanlal/layerz-data";
-      // Fetch contents from GitHub (falls back to local in api if repo unconfigured)
-      const res = await fetch(`/api/admin/save?file=${fileName}`); // Check if check route is present or fetch via proxy
-      
-      // Let's call Github API on the client side using a public fetch check,
-      // but since GITHUB_PAT is stored on the server side, we should query our website's internal API!
-      // Wait, let's create a server route or query our website to get the data,
-      // actually, the website provides getEcosystemData on the server side. Let's make an API route to fetch data if needed,
-      // or we can query GitHub directly if GITHUB_PAT is in the headers? GITHUB_PAT is secret, so we should query our API!
-      // Wait! Do we have a API route to fetch?
-      // Let's create an API route `/api/admin/data?file=...` that reads files using `getEcosystemData`!
-      // Ah! We can easily make that endpoint! Let's check if there is an endpoint `/api/admin/data` first.
-      // If we don't have it, we can create it, or fetch via a GET request to `/api/admin/save?file=...`?
-      // Wait! Let's check if the GET method is supported in `save/route.ts`. In our saved save/route.ts, we only wrote POST!
-      // Let's add GET support to `save/route.ts` or make `/api/admin/data/route.ts` so it fetches data from GitHub in real time!
-      // Yes, let's modify `/api/admin/save/route.ts` to ALSO support GET!
-      // Wait, we can implement GET in `/api/admin/save/route.ts` to return the file content.
-      // Let's look at how the page currently gets data. It does a direct fetch to github contents API at:
-      // `https://api.github.com/repos/${repository}/contents/src/data/${fileName}`
-      // but that requires token on the client side!
-      // If the token is on the server side, we can just do a GET request to our server which handles the GitHub fetching securely!
-      // Yes! Let's make a GET endpoint in `/api/admin/save/route.ts` that fetches the file content using GITHUB_PAT on the server,
-      // and returns it to the client! That prevents any rate-limit exhaustion and leaks of GITHUB_PAT.
-      // Let's first look at the fetch logic we're writing here:
-      const response = await fetch(`/api/admin/data?file=${fileName}`);
-      if (response.status === 200) {
-        const json = await response.json();
-        setFileData(json);
-        setRawJsonText(JSON.stringify(json, null, 2));
-        setSaveStatus({ loading: false });
-      } else {
-        // Fallback: load local mock data if the API failed or is not ready yet
-        const fallbackRes = await fetch(`/api/admin/data?file=${fileName}&local=true`);
-        if (fallbackRes.status === 200) {
-          const json = await fallbackRes.json();
-          setFileData(json);
-          setRawJsonText(JSON.stringify(json, null, 2));
-          setSaveStatus({ loading: false });
-        } else {
-          setSaveStatus({
-            loading: false,
-            success: false,
-            message: `Could not retrieve ${fileName}. Verify credentials on Server.`
-          });
-        }
-      }
-    } catch (err) {
-      setSaveStatus({
-        loading: false,
-        success: false,
-        message: "Failed to connect to data endpoint."
-      });
-    }
-  };
-
   useEffect(() => {
     if (isAuthenticated) {
-      loadFileData(activeFile);
-      setIsEditingRaw(false);
+      setTimeout(() => {
+        loadFileData(activeFile);
+        setIsEditingRaw(false);
+      }, 0);
     }
   }, [activeFile, isAuthenticated]);
 
@@ -278,7 +258,7 @@ export default function AdminPortal() {
           message: data.error || "Save failed."
         });
       }
-    } catch (err) {
+    } catch {
       setSaveStatus({
         loading: false,
         success: false,
@@ -384,16 +364,16 @@ export default function AdminPortal() {
     setIsFormOpen(true);
   };
 
-  const openEditForm = (item: any, index: number) => {
+  const openEditForm = (item: EcosystemItem, index: number) => {
     setEditingItemIndex(index);
-    if (activeFile === "events.json") setEventForm({ ...item });
-    else if (activeFile === "blogs.json") setBlogForm({ ...item });
-    else if (activeFile === "roadmap.json") setQuarterForm({ ...item });
-    else if (activeFile === "programs.json") setProgramForm({ ...item });
-    else if (activeFile === "studio.json") setProjectForm({ ...item });
-    else if (activeFile === "members.json") setMemberForm({ ...item });
-    else if (activeFile === "partnerships.json") setPartnerForm({ ...item });
-    else if (activeFile === "resources.json") setResourceForm({ ...item });
+    if (activeFile === "events.json") setEventForm({ ...item } as Partial<Event>);
+    else if (activeFile === "blogs.json") setBlogForm({ ...item } as Partial<Blog>);
+    else if (activeFile === "roadmap.json") setQuarterForm({ ...item } as Partial<Quarter>);
+    else if (activeFile === "programs.json") setProgramForm({ ...item } as Partial<Program>);
+    else if (activeFile === "studio.json") setProjectForm({ ...item } as Partial<Project>);
+    else if (activeFile === "members.json") setMemberForm({ ...item } as Partial<Member>);
+    else if (activeFile === "partnerships.json") setPartnerForm({ ...item } as Partial<Partner>);
+    else if (activeFile === "resources.json") setResourceForm({ ...item } as Partial<Resource>);
     setIsFormOpen(true);
   };
 
@@ -409,16 +389,16 @@ export default function AdminPortal() {
 
   const handleFormSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    let draftItem: any;
+    let draftItem: EcosystemItem;
 
-    if (activeFile === "events.json") draftItem = eventForm;
-    else if (activeFile === "blogs.json") draftItem = blogForm;
-    else if (activeFile === "roadmap.json") draftItem = quarterForm;
-    else if (activeFile === "programs.json") draftItem = programForm;
-    else if (activeFile === "studio.json") draftItem = projectForm;
-    else if (activeFile === "members.json") draftItem = memberForm;
-    else if (activeFile === "partnerships.json") draftItem = partnerForm;
-    else if (activeFile === "resources.json") draftItem = resourceForm;
+    if (activeFile === "events.json") draftItem = eventForm as Event;
+    else if (activeFile === "blogs.json") draftItem = blogForm as Blog;
+    else if (activeFile === "roadmap.json") draftItem = quarterForm as Quarter;
+    else if (activeFile === "programs.json") draftItem = programForm as Program;
+    else if (activeFile === "studio.json") draftItem = projectForm as Project;
+    else if (activeFile === "members.json") draftItem = memberForm as Member;
+    else if (activeFile === "partnerships.json") draftItem = partnerForm as Partner;
+    else draftItem = resourceForm as Resource;
 
     const updatedData = [...fileData];
     if (editingItemIndex !== null) {
@@ -441,8 +421,9 @@ export default function AdminPortal() {
       setFileData(parsed);
       setIsEditingRaw(false);
       handleSaveToGitHub(rawJsonText);
-    } catch (err: any) {
-      alert(`Invalid JSON format: ${err.message}`);
+    } catch (err: unknown) {
+      const errMsg = err instanceof Error ? err.message : String(err);
+      alert(`Invalid JSON format: ${errMsg}`);
     }
   };
 
@@ -650,7 +631,7 @@ export default function AdminPortal() {
             <div className="space-y-4">
               {fileData.length === 0 ? (
                 <div className="text-center py-12 bg-white rounded-xl border border-[#eaeaea]">
-                  <p className="text-xs text-[#808080]">No records found. Click "Create Record" to get started.</p>
+                  <p className="text-xs text-[#808080]">No records found. Click &quot;Create Record&quot; to get started.</p>
                 </div>
               ) : (
                 <div className="grid grid-cols-1 gap-4">

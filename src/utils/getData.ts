@@ -47,6 +47,7 @@ export async function getEcosystemData<T>(fileName: string): Promise<T[]> {
 
   // Double fallback: import local data if everything else fails
   try {
+    // eslint-disable-next-line @typescript-eslint/no-require-imports
     const fallbackData = require(`@/data/${fileName}`);
     return fallbackData as T[];
   } catch (err) {

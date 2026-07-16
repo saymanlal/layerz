@@ -74,7 +74,7 @@ interface Point3D {
   size: number;
   label?: string;
   type: "genesis" | "member" | "project" | "partner" | "program" | "roadmap";
-  meta?: any;
+  meta?: Member | Project | Partner | Program;
 }
 
 interface CursorParticle {
@@ -91,10 +91,10 @@ export default function HomePageClient({
   studioWork,
   members,
   partners,
-  blogs,
+  // blogs,
 }: HomePageClientProps) {
   const [activeScene, setActiveScene] = useState(0);
-  const [selectedItem, setSelectedItem] = useState<any>(null);
+  const [selectedItem, setSelectedItem] = useState<Member | Project | Partner | Program | null>(null);
   
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const pointsRef = useRef<Point3D[]>([]);
@@ -140,7 +140,7 @@ export default function HomePageClient({
     });
 
     // 2. Contributor Registry nodes
-    members.forEach((m, i) => {
+    members.forEach((m) => {
       pts.push({
         x: (Math.random() - 0.5) * 100,
         y: (Math.random() - 0.5) * 100,
@@ -155,7 +155,7 @@ export default function HomePageClient({
     });
 
     // 3. Program Cohort nodes
-    programs.forEach((pr, i) => {
+    programs.forEach((pr) => {
       pts.push({
         x: (Math.random() - 0.5) * 120,
         y: (Math.random() - 0.5) * 120,
@@ -170,7 +170,7 @@ export default function HomePageClient({
     });
 
     // 4. Studio Project blocks
-    studioWork.forEach((proj, i) => {
+    studioWork.forEach((proj) => {
       pts.push({
         x: (Math.random() - 0.5) * 150,
         y: (Math.random() - 0.5) * 150,
@@ -185,7 +185,7 @@ export default function HomePageClient({
     });
 
     // 5. Venture & Partner nodes
-    partners.forEach((partner, i) => {
+    partners.forEach((partner) => {
       pts.push({
         x: (Math.random() - 0.5) * 180,
         y: (Math.random() - 0.5) * 180,
@@ -393,7 +393,7 @@ export default function HomePageClient({
     canvas.addEventListener("click", handleClick);
 
     // Project coordinates
-    const project = (x: number, y: number, z: number, yaw: number, pitch: number, cam: any) => {
+    const project = (x: number, y: number, z: number, yaw: number, pitch: number, cam: typeof cameraRef.current) => {
       const dx = x - cam.x;
       const dy = y - cam.y;
       const dz = z - cam.z;
@@ -427,6 +427,11 @@ export default function HomePageClient({
       cam.z += (cam.tz - cam.z) * 0.05;
       cam.yaw += (cam.tyaw - cam.yaw) * 0.05;
       cam.pitch += (cam.tpitch - cam.pitch) * 0.05;
+
+      const yawEl = document.getElementById("hud-camera-yaw");
+      if (yawEl) yawEl.innerText = cam.yaw.toFixed(4);
+      const pitchEl = document.getElementById("hud-camera-pitch");
+      if (pitchEl) pitchEl.innerText = cam.pitch.toFixed(4);
 
       const yawSway = cam.yaw + Math.sin(time * 0.4) * 0.06;
       const pitchSway = cam.pitch + Math.cos(time * 0.3) * 0.04;
@@ -504,7 +509,7 @@ export default function HomePageClient({
       }
 
       // Check node cursor overlaps
-      let closestNode: any = null;
+      let closestNode: Point3D | null = null;
       let minMouseDist = 20;
 
       projected.forEach((p) => {
@@ -600,8 +605,8 @@ export default function HomePageClient({
       <div className="fixed top-24 left-8 z-30 font-mono text-[9px] text-gray-500 uppercase tracking-widest pointer-events-none space-y-1 hidden md:block">
         <p>SYSTEM_CORE: ACTIVE_OK</p>
         <p>ACTIVE_SCENE_COORDS: [LAYER_0{activeScene + 1}]</p>
-        <p>CAMERA_YAW: {cameraRef.current.yaw.toFixed(4)}</p>
-        <p>CAMERA_PITCH: {cameraRef.current.pitch.toFixed(4)}</p>
+        <p>CAMERA_YAW: <span id="hud-camera-yaw">0.0000</span></p>
+        <p>CAMERA_PITCH: <span id="hud-camera-pitch">0.0000</span></p>
       </div>
 
       {/* Interactive side information panel */}
@@ -811,7 +816,7 @@ export default function HomePageClient({
               Ready to Build the Future?
             </h2>
             <p className="text-xs text-gray-400 leading-relaxed max-w-lg mx-auto">
-              Whether you're a student, developer, designer, founder, researcher, or organization, Layerz is where ambitious people come together to create meaningful impact.
+              Whether you&apos;re a student, developer, designer, founder, researcher, or organization, Layerz is where ambitious people come together to create meaningful impact.
             </p>
             
             <div className="flex justify-center gap-4 pt-4">

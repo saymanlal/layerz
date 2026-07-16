@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import Link from "next/link";
 import ProceduralBg from "@/components/ProceduralBg";
 
 interface Member {
@@ -34,7 +33,7 @@ interface AboutPageClientProps {
 export default function AboutPageClient({ initialMembers, partnerships: initialPartnerships }: AboutPageClientProps) {
   const [members, setMembers] = useState<Member[]>(initialMembers);
   const [partnerships, setPartnerships] = useState<Partnership[]>(initialPartnerships);
-  const [selectedMember, setSelectedMember] = useState<Member | null>(null);
+  const [selectedMember, setSelectedMember] = useState<Member | null>(initialMembers[0] || null);
   const [activePartnerTab, setActivePartnerTab] = useState<"all" | "investor" | "sponsor" | "partner">("all");
   const [copiedColor, setCopiedColor] = useState<string | null>(null);
 
@@ -46,7 +45,15 @@ export default function AboutPageClient({ initialMembers, partnerships: initialP
           fetch("/api/admin/data?file=members.json"),
           fetch("/api/admin/data?file=partnerships.json")
         ]);
-        if (resMembers.ok) setMembers(await resMembers.json());
+        if (resMembers.ok) {
+          const newMembers = await resMembers.json() as Member[];
+          setMembers(newMembers);
+          setSelectedMember((prev) => {
+            if (!prev) return newMembers[0] || null;
+            const exists = newMembers.some((m) => m.id === prev.id);
+            return exists ? prev : (newMembers[0] || null);
+          });
+        }
         if (resPartnerships.ok) setPartnerships(await resPartnerships.json());
       } catch (err) {
         console.error("About sync failed:", err);
@@ -56,12 +63,6 @@ export default function AboutPageClient({ initialMembers, partnerships: initialP
     const interval = setInterval(syncAbout, 6000);
     return () => clearInterval(interval);
   }, []);
-
-  useEffect(() => {
-    if (members.length > 0 && !selectedMember) {
-      setSelectedMember(members[0]);
-    }
-  }, [members, selectedMember]);
 
   const filteredPartners = partnerships.filter(
     (p) => activePartnerTab === "all" || p.type === activePartnerTab

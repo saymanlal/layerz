@@ -78,13 +78,13 @@ export default function ThreeDBuilderHero() {
     // 3D Isometric Projection Helper
     const project = (x: number, y: number, z: number, angleX: number, angleY: number) => {
       // Rotation on Y axis (Yaw)
-      let rotX = x * Math.cos(angleY) - z * Math.sin(angleY);
-      let rotZ = x * Math.sin(angleY) + z * Math.cos(angleY);
-      let rotY = y;
+      const rotX = x * Math.cos(angleY) - z * Math.sin(angleY);
+      const rotZ = x * Math.sin(angleY) + z * Math.cos(angleY);
+      const rotY = y;
 
       // Rotation on X axis (Pitch)
-      let finalY = rotY * Math.cos(angleX) - rotZ * Math.sin(angleX);
-      let finalZ = rotY * Math.sin(angleX) + rotZ * Math.cos(angleX);
+      const finalY = rotY * Math.cos(angleX) - rotZ * Math.sin(angleX);
+      const finalZ = rotY * Math.sin(angleX) + rotZ * Math.cos(angleX);
 
       // Project with perspective
       const scale = 50;
@@ -95,8 +95,7 @@ export default function ThreeDBuilderHero() {
       return { x: projX, y: projY, z: finalZ };
     };
 
-    const drawCube = (cx: number, cy: number, size: number, color: string, depth: number) => {
-      const scale = 0.5; // isometric scaling
+    const drawCube = (cx: number, cy: number, size: number, color: string) => {
 
       // Color tints based on light source from top-right
       const baseRGB = hexToRgb(color) || { r: 139, g: 136, b: 248 };
@@ -156,7 +155,6 @@ export default function ThreeDBuilderHero() {
       // Draw grid blueprint base
       ctx.strokeStyle = "rgba(17,17,17,0.03)";
       ctx.lineWidth = 0.5;
-      const blueprintSize = 80;
       for (let x = -2; x <= 2; x++) {
         const p1 = project(x, 1, -2, mouseRef.current.angleX, mouseRef.current.angleY);
         const p2 = project(x, 1, 2, mouseRef.current.angleX, mouseRef.current.angleY);
@@ -184,7 +182,7 @@ export default function ThreeDBuilderHero() {
 
       // Render projected blocks
       projectedBlocks.forEach((b) => {
-        drawCube(b.projX, b.projY, 18, b.color, b.depth);
+        drawCube(b.projX, b.projY, 18, b.color);
       });
 
       animationFrameId = requestAnimationFrame(render);

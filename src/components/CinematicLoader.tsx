@@ -11,7 +11,9 @@ export default function CinematicLoader() {
     // Only run loader on initial load per tab session
     const hasLoaded = sessionStorage.getItem("layerz_loaded");
     if (hasLoaded === "true") {
-      setVisible(false);
+      setTimeout(() => {
+        setVisible(false);
+      }, 0);
       return;
     }
 

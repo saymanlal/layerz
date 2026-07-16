@@ -30,7 +30,8 @@ export async function GET(request: Request) {
 
     const data = await getEcosystemData(fileName);
     return NextResponse.json(data);
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message || "Failed to load data" }, { status: 500 });
+  } catch (error: unknown) {
+    const errorMsg = error instanceof Error ? error.message : "Failed to load data";
+    return NextResponse.json({ error: errorMsg }, { status: 500 });
   }
 }

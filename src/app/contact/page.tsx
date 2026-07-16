@@ -1,26 +1,19 @@
 "use client";
 
-import { useState, useEffect, Suspense } from "react";
+import { useState, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import ThreeDBlockBg from "@/components/ThreeDBlockBg";
 
 function ContactPageContent() {
   const searchParams = useSearchParams();
-  const [reason, setReason] = useState("general");
+  const roleParam = searchParams.get("role");
+  const [reason, setReason] = useState(roleParam ? "careers" : "general");
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [org, setOrg] = useState("");
-  const [msg, setMsg] = useState("");
+  const [msg, setMsg] = useState(roleParam ? `Applying for position: ${roleParam}\n\nIntroduce yourself and attach resume/portfolio links here...` : "");
   const [status, setStatus] = useState<{ type: "success" | "error"; text: string } | null>(null);
   const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    const roleParam = searchParams.get("role");
-    if (roleParam) {
-      setReason("careers");
-      setMsg(`Applying for position: ${roleParam}\n\nIntroduce yourself and attach resume/portfolio links here...`);
-    }
-  }, [searchParams]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -66,7 +59,7 @@ function ContactPageContent() {
               Gateway to the Ecosystem
             </h1>
             <p className="text-sm text-[#5C5C5C] leading-relaxed">
-              Have a project, sponsorship proposal, chapter inquiry, or career application? Submit the request below, and we'll route it to the appropriate Layer team.
+              Have a project, sponsorship proposal, chapter inquiry, or career application? Submit the request below, and we&apos;ll route it to the appropriate Layer team.
             </p>
           </div>
 

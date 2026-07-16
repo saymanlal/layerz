@@ -127,7 +127,7 @@ export default function ResourcesPageClient({ initialResources }: ResourcesPageC
                 ].map((tab) => (
                   <li key={tab.id}>
                     <button
-                      onClick={() => setActiveTab(tab.id as any)}
+                      onClick={() => setActiveTab(tab.id as "all" | "playbook" | "toolkit" | "brand" | "press")}
                       className={`w-full text-left px-3.5 py-2.5 rounded-lg font-bold transition-all cursor-pointer ${
                         activeTab === tab.id
                           ? "bg-[#111111] text-white"

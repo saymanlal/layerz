@@ -19,7 +19,17 @@ interface RoadmapPageClientProps {
 export default function RoadmapPageClient({ initialRoadmap }: RoadmapPageClientProps) {
   const [roadmap, setRoadmap] = useState<Quarter[]>(initialRoadmap);
   const [selectedQuarterId, setSelectedQuarterId] = useState<string>("rm-2");
-  const [completedMilestones, setCompletedMilestones] = useState<Record<string, boolean>>({});
+  const [completedMilestones, setCompletedMilestones] = useState<Record<string, boolean>>(() => {
+    const initialCompleted: Record<string, boolean> = {};
+    initialRoadmap.forEach((q) => {
+      if (q.status === "completed") {
+        q.milestones.forEach((m) => {
+          initialCompleted[`${q.id}-${m}`] = true;
+        });
+      }
+    });
+    return initialCompleted;
+  });
   const [zoomLevel, setZoomLevel] = useState<"quarter" | "month">("month");
   const [activeFilter, setActiveFilter] = useState<string>("all");
 
@@ -31,7 +41,17 @@ export default function RoadmapPageClient({ initialRoadmap }: RoadmapPageClientP
       try {
         const res = await fetch("/api/admin/data?file=roadmap.json");
         if (res.ok) {
-          setRoadmap(await res.json());
+          const fetchedRoadmap = await res.json() as Quarter[];
+          setRoadmap(fetchedRoadmap);
+          const initialCompleted: Record<string, boolean> = {};
+          fetchedRoadmap.forEach((q) => {
+            if (q.status === "completed") {
+              q.milestones.forEach((m) => {
+                initialCompleted[`${q.id}-${m}`] = true;
+              });
+            }
+          });
+          setCompletedMilestones(initialCompleted);
         }
       } catch (err) {
         console.error("Roadmap sync failed:", err);
@@ -41,19 +61,6 @@ export default function RoadmapPageClient({ initialRoadmap }: RoadmapPageClientP
     const interval = setInterval(syncRoadmap, 6000);
     return () => clearInterval(interval);
   }, []);
-
-  // Pre-load completed milestones based on status
-  useEffect(() => {
-    const initialCompleted: Record<string, boolean> = {};
-    roadmap.forEach((q) => {
-      if (q.status === "completed") {
-        q.milestones.forEach((m) => {
-          initialCompleted[`${q.id}-${m}`] = true;
-        });
-      }
-    });
-    setCompletedMilestones(initialCompleted);
-  }, [roadmap]);
 
   const toggleMilestone = (quarterId: string, milestone: string) => {
     const key = `${quarterId}-${milestone}`;

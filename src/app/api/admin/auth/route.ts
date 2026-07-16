@@ -2,6 +2,11 @@ import { NextResponse } from "next/server";
 import fs from "fs";
 import path from "path";
 
+interface AccessUser {
+  email?: string;
+  password?: string;
+}
+
 export async function POST(request: Request) {
   try {
     const { email, password } = await request.json();
@@ -15,7 +20,7 @@ export async function POST(request: Request) {
     const branch = process.env.GITHUB_BRANCH || "main";
 
     let authenticated = false;
-    let accessList: any[] = [];
+    let accessList: AccessUser[] = [];
     let isFallback = false;
     let warningMsg = "";
 
@@ -38,7 +43,7 @@ export async function POST(request: Request) {
 
           if (res.status === 200) {
             const text = await res.text();
-            accessList = JSON.parse(text);
+            accessList = JSON.parse(text) as AccessUser[];
             accessFileFound = true;
             break;
           }
@@ -49,7 +54,7 @@ export async function POST(request: Request) {
 
       if (accessFileFound && accessList.length > 0) {
         const match = accessList.find(
-          (user: any) => user.email === email && user.password === password
+          (user: AccessUser) => user.email === email && user.password === password
         );
         if (match) {
           authenticated = true;
@@ -63,9 +68,9 @@ export async function POST(request: Request) {
         const localPath = path.join(process.cwd(), "src", "data", "access.json");
         if (fs.existsSync(localPath)) {
           const text = fs.readFileSync(localPath, "utf8");
-          const localAccessList = JSON.parse(text);
+          const localAccessList = JSON.parse(text) as AccessUser[];
           const match = localAccessList.find(
-            (user: any) => user.email === email && user.password === password
+            (user: AccessUser) => user.email === email && user.password === password
           );
           if (match) {
             authenticated = true;
@@ -112,8 +117,9 @@ export async function POST(request: Request) {
       error: "Invalid email or password credentials."
     }, { status: 401 });
 
-  } catch (error: any) {
-    return NextResponse.json({ error: error.message || "Authentication error" }, { status: 500 });
+  } catch (error: unknown) {
+    const errorMsg = error instanceof Error ? error.message : "Authentication error";
+    return NextResponse.json({ error: errorMsg }, { status: 500 });
   }
 }
 
