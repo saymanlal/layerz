@@ -700,11 +700,11 @@ export default function HomePageClient({
       {/* ----------------------------------------------------
           8 NARRATIVE OVERLAY SCENES
           ---------------------------------------------------- */}
-      <div className="relative z-20 pointer-events-none">
+      <main className="relative z-20 pointer-events-none">
 
         {/* Scene 01: The Ecosystem Awakens */}
-        <section className="narrative-layer min-h-screen flex items-center justify-start px-6 md:px-24">
-          <div className="max-w-2xl text-left space-y-6 pointer-events-auto bg-white/80 p-10 md:p-12 rounded-3xl border border-gray-200/50 shadow-2xl backdrop-blur-md">
+        <section className="narrative-layer min-h-screen flex flex-col items-center justify-center px-6 text-center">
+          <header className="max-w-3xl space-y-6 pointer-events-auto bg-white/80 p-10 md:p-12 rounded-3xl border border-gray-200/50 shadow-2xl backdrop-blur-md mx-auto flex flex-col items-center">
             <span className="text-[10px] font-mono font-bold text-[#5956c8] uppercase tracking-widest block mb-1">
               INTRODUCING // LAYERZ GROUP
             </span>
@@ -712,20 +712,43 @@ export default function HomePageClient({
               <span className="block text-[#5956c8]">Layerz Group</span>
               <span className="text-3xl md:text-5xl font-black block mt-2 text-gray-600 leading-tight">Building the Next Layer of Innovation</span>
             </h1>
-            <p className="text-sm text-gray-600 leading-relaxed">
+            <p className="text-sm text-gray-600 leading-relaxed max-w-xl mx-auto">
               Layerz is a global innovation ecosystem empowering builders, creators, startups, and communities through technology, design, education, and collaboration.
             </p>
-            <div className="flex gap-4 pt-2">
+            <div className="flex justify-center gap-4 pt-2">
               <Link href="/ecosystem" className="px-6 py-3.5 rounded-lg bg-gray-900 text-white hover:bg-[#5956c8] transition-colors font-bold text-xs uppercase tracking-wider font-mono shadow-md">
                 Explore Ecosystem
               </Link>
             </div>
-          </div>
+          </header>
         </section>
 
         {/* Scene 02: Networks Assemble */}
-        <section className="narrative-layer min-h-screen flex items-center justify-end px-6 md:px-24">
-          <div className="max-w-xl text-left space-y-6 pointer-events-auto bg-white/80 p-8 rounded-2xl border border-gray-200/50 shadow-xl backdrop-blur-md">
+        <section className="narrative-layer min-h-screen grid grid-cols-1 md:grid-cols-2 gap-12 items-center px-6 md:px-24">
+          <aside className="flex justify-center items-center pointer-events-auto perspective-wrapper order-2 md:order-1">
+            <figure className="relative w-64 h-64 block-3d hover:rotate-y-12 transform-gpu">
+              {/* Card 1: Lead Engineer */}
+              <div className="absolute top-0 left-0 w-44 bg-white/95 border border-gray-200 p-4 rounded-xl shadow-lg transform translate-z-[40px] rotate-y-[-10deg] hover:translate-z-[60px] transition-all duration-300">
+                <div className="w-8 h-8 rounded-full bg-[#5956c8] mb-2" />
+                <p className="font-bold text-[10px] text-gray-800">SARAH_DEV</p>
+                <p className="text-[8px] text-gray-500 font-mono">Lead Smart Contracts</p>
+              </div>
+              {/* Card 2: Creative Designer */}
+              <div className="absolute top-12 left-20 w-44 bg-white/95 border border-gray-200 p-4 rounded-xl shadow-lg transform translate-z-[20px] rotate-x-[5deg] hover:translate-z-[40px] transition-all duration-300">
+                <div className="w-8 h-8 rounded-full bg-[#10B981] mb-2" />
+                <p className="font-bold text-[10px] text-gray-800">ALEX_DESIGN</p>
+                <p className="text-[8px] text-gray-500 font-mono">Creative Director</p>
+              </div>
+              {/* Card 3: Ecosystem Host */}
+              <div className="absolute top-28 left-8 w-44 bg-white/95 border border-gray-200 p-4 rounded-xl shadow-lg transform translate-z-[60px] rotate-z-[-5deg] hover:translate-z-[80px] transition-all duration-300">
+                <div className="w-8 h-8 rounded-full bg-[#D946EF] mb-2" />
+                <p className="font-bold text-[10px] text-gray-800">MIKE_OPS</p>
+                <p className="text-[8px] text-gray-500 font-mono">Chapter Coordinator</p>
+              </div>
+            </figure>
+          </aside>
+
+          <article className="max-w-xl text-left space-y-6 pointer-events-auto bg-white/80 p-8 rounded-2xl border border-gray-200/50 shadow-xl backdrop-blur-md order-1 md:order-2">
             <span className="text-[10px] font-mono font-bold text-[#5956c8] uppercase tracking-widest block">
               SCENE_02 // ASSEMBLY PROTOCOL
             </span>
@@ -738,12 +761,12 @@ export default function HomePageClient({
             <Link href="/about" className="inline-block text-xs font-bold text-[#5956c8] hover:text-[#413eaf] font-mono">
               OPEN CONTRIBUTOR REGISTRY &rarr;
             </Link>
-          </div>
+          </article>
         </section>
 
         {/* Scene 03: Programs Emerge */}
-        <section className="narrative-layer min-h-screen flex items-center justify-start px-6 md:px-24">
-          <div className="max-w-xl text-left space-y-6 pointer-events-auto bg-white/80 p-8 rounded-2xl border border-gray-200/50 shadow-xl backdrop-blur-md">
+        <section className="narrative-layer min-h-screen grid grid-cols-1 md:grid-cols-2 gap-12 items-center px-6 md:px-24">
+          <article className="max-w-xl text-left space-y-6 pointer-events-auto bg-white/80 p-8 rounded-2xl border border-gray-200/50 shadow-xl backdrop-blur-md">
             <span className="text-[10px] font-mono font-bold text-[#5956c8] uppercase tracking-widest block">
               SCENE_03 // ARCHITECTURAL DRAFT
             </span>
@@ -763,12 +786,53 @@ export default function HomePageClient({
                 <p>Designing digital brands & Next.js systems.</p>
               </div>
             </div>
-          </div>
+          </article>
+
+          <aside className="flex justify-center items-center pointer-events-auto perspective-wrapper">
+            <figure className="relative w-64 h-64 block-3d transform-gpu rotate-x-[35deg] rotate-z-[-20deg]">
+              {/* Layer 1 */}
+              <div className="absolute top-0 left-0 w-52 h-14 bg-white/95 border-2 border-[#5956c8] rounded-xl shadow-xl flex items-center justify-between px-4 transform translate-z-0 hover:translate-y-[-10px] transition-all">
+                <span className="font-mono text-[9px] font-bold text-gray-800">L_01 // FOUNDATION</span>
+                <span className="w-2 h-2 rounded-full bg-[#5956c8] pulsing-ring" />
+              </div>
+              {/* Layer 2 */}
+              <div className="absolute top-16 left-4 w-52 h-14 bg-white/95 border-2 border-[#10B981] rounded-xl shadow-xl flex items-center justify-between px-4 transform translate-z-[30px] hover:translate-y-[-10px] transition-all">
+                <span className="font-mono text-[9px] font-bold text-gray-800">L_02 // STUDIO</span>
+                <span className="w-2 h-2 rounded-full bg-[#10B981] pulsing-ring" />
+              </div>
+              {/* Layer 3 */}
+              <div className="absolute top-32 left-8 w-52 h-14 bg-white/95 border-2 border-[#D946EF] rounded-xl shadow-xl flex items-center justify-between px-4 transform translate-z-[60px] hover:translate-y-[-10px] transition-all">
+                <span className="font-mono text-[9px] font-bold text-gray-800">L_03 // VENTURES</span>
+                <span className="w-2 h-2 rounded-full bg-[#D946EF] pulsing-ring" />
+              </div>
+            </figure>
+          </aside>
         </section>
 
         {/* Scene 04: Events become memories */}
-        <section className="narrative-layer min-h-screen flex items-center justify-end px-6 md:px-24">
-          <div className="max-w-xl text-left space-y-6 pointer-events-auto bg-white/80 p-8 rounded-2xl border border-gray-200/50 shadow-xl backdrop-blur-md">
+        <section className="narrative-layer min-h-screen grid grid-cols-1 md:grid-cols-2 gap-12 items-center px-6 md:px-24">
+          <aside className="flex justify-center items-center pointer-events-auto perspective-wrapper order-2 md:order-1">
+            <figure className="relative w-64 h-64 block-3d transform-gpu rotate-y-[15deg] rotate-x-[10deg]">
+              <div className="w-56 bg-white/95 border border-gray-200 rounded-2xl shadow-2xl p-6 transform translate-z-[30px]">
+                <div className="flex justify-between items-center mb-4">
+                  <span className="font-mono text-[9px] font-bold text-[#5956c8]">CHAPTER_CALENDAR</span>
+                  <span className="px-2 py-0.5 rounded-full bg-red-100 text-red-600 font-mono text-[8px] font-bold animate-pulse">LIVE NOW</span>
+                </div>
+                <div className="space-y-3 font-mono text-[9px]">
+                  <div className="p-2.5 bg-gray-50 border border-gray-150 rounded-lg flex justify-between items-center">
+                    <span className="text-gray-800 font-bold">JUL_24 // HACKATHON</span>
+                    <span className="text-[#10B981] font-bold">120 REG</span>
+                  </div>
+                  <div className="p-2.5 bg-gray-50 border border-gray-150 rounded-lg flex justify-between items-center">
+                    <span className="text-gray-800 font-bold">AUG_10 // WORKSHOP</span>
+                    <span className="text-[#5956c8] font-bold">ACTIVE</span>
+                  </div>
+                </div>
+              </div>
+            </figure>
+          </aside>
+
+          <article className="max-w-xl text-left space-y-6 pointer-events-auto bg-white/80 p-8 rounded-2xl border border-gray-200/50 shadow-xl backdrop-blur-md order-1 md:order-2">
             <span className="text-[10px] font-mono font-bold text-[#5956c8] uppercase tracking-widest block">
               SCENE_04 // KEYNOTE MEMORIES
             </span>
@@ -781,12 +845,12 @@ export default function HomePageClient({
             <Link href="/events" className="inline-block text-xs font-bold text-[#5956c8] hover:text-[#413eaf] font-mono">
               INSPECT EVENTS INDEX &rarr;
             </Link>
-          </div>
+          </article>
         </section>
 
         {/* Scene 05: Partners Connected Nodes */}
-        <section className="narrative-layer min-h-screen flex items-center justify-start px-6 md:px-24">
-          <div className="max-w-xl text-left space-y-6 pointer-events-auto bg-white/80 p-8 rounded-2xl border border-gray-200/50 shadow-xl backdrop-blur-md">
+        <section className="narrative-layer min-h-screen grid grid-cols-1 md:grid-cols-2 gap-12 items-center px-6 md:px-24">
+          <article className="max-w-xl text-left space-y-6 pointer-events-auto bg-white/80 p-8 rounded-2xl border border-gray-200/50 shadow-xl backdrop-blur-md">
             <span className="text-[10px] font-mono font-bold text-[#5956c8] uppercase tracking-widest block">
               SCENE_05 // RELATIONSHIP MAP
             </span>
@@ -796,12 +860,55 @@ export default function HomePageClient({
             <p className="text-xs text-gray-600 leading-relaxed">
               We collaborate with decentralized VC networks, university chapters, and protocol groups backing modular innovation.
             </p>
-          </div>
+          </article>
+
+          <aside className="flex justify-center items-center pointer-events-auto perspective-wrapper">
+            <figure className="relative w-64 h-64 block-3d transform-gpu rotate-x-[25deg]">
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="w-32 h-32 rounded-full border border-dashed border-[#5956c8]/30 animate-spin" style={{ animationDuration: "12s" }} />
+              </div>
+              <div className="absolute top-4 left-4 w-28 bg-white/95 border border-gray-200 p-2.5 rounded-lg shadow-lg flex items-center gap-2 transform translate-z-[20px]">
+                <div className="w-5 h-5 rounded bg-gray-900 text-white font-mono text-[8px] flex items-center justify-center font-bold">V</div>
+                <span className="font-mono text-[8px] font-bold text-gray-700">VERCEL_NODE</span>
+              </div>
+              <div className="absolute bottom-4 right-4 w-28 bg-white/95 border border-gray-200 p-2.5 rounded-lg shadow-lg flex items-center gap-2 transform translate-z-[40px]">
+                <div className="w-5 h-5 rounded bg-[#5956c8] text-white font-mono text-[8px] flex items-center justify-center font-bold">P</div>
+                <span className="font-mono text-[8px] font-bold text-gray-700">POLY_LABS</span>
+              </div>
+              <div className="absolute top-28 right-0 w-28 bg-white/95 border border-gray-200 p-2.5 rounded-lg shadow-lg flex items-center gap-2 transform translate-z-[10px]">
+                <div className="w-5 h-5 rounded bg-[#10B981] text-white font-mono text-[8px] flex items-center justify-center font-bold">G</div>
+                <span className="font-mono text-[8px] font-bold text-gray-700">GATEWAY_VC</span>
+              </div>
+            </figure>
+          </aside>
         </section>
 
         {/* Scene 06: Studio Projects */}
-        <section className="narrative-layer min-h-screen flex items-center justify-end px-6 md:px-24">
-          <div className="max-w-xl text-left space-y-6 pointer-events-auto bg-white/80 p-8 rounded-2xl border border-gray-200/50 shadow-xl backdrop-blur-md">
+        <section className="narrative-layer min-h-screen grid grid-cols-1 md:grid-cols-2 gap-12 items-center px-6 md:px-24">
+          <aside className="flex justify-center items-center pointer-events-auto perspective-wrapper order-2 md:order-1">
+            <figure className="relative w-72 h-56 block-3d transform-gpu rotate-y-[-10deg] rotate-x-[15deg]">
+              <div className="w-full h-full bg-white/95 border-2 border-gray-800 rounded-xl shadow-2xl p-4 overflow-hidden flex flex-col justify-between">
+                <div className="flex items-center gap-1.5 border-b border-gray-100 pb-2 mb-2">
+                  <div className="w-2 h-2 rounded-full bg-red-400" />
+                  <div className="w-2 h-2 rounded-full bg-yellow-400" />
+                  <div className="w-2 h-2 rounded-full bg-green-400" />
+                  <span className="font-mono text-[7px] text-gray-400 ml-2">studio_editor.tsx</span>
+                </div>
+                <div className="flex-1 font-mono text-[8px] text-gray-500 space-y-1.5 pt-2">
+                  <p className="text-[#5956c8]">const LayerzStudio = async () =&gt; &#123;</p>
+                  <p className="pl-4">await compileFrontend(&quot;modular_core&quot;);</p>
+                  <p className="pl-4 text-[#10B981]">return new StudioDeployment(&#123; success: true &#125;);</p>
+                  <p className="text-[#5956c8]">&#125;;</p>
+                </div>
+                <div className="h-6 bg-gray-50 border border-gray-150 rounded flex items-center justify-between px-2 font-mono text-[8px]">
+                  <span className="text-[#10B981] font-bold">DEPLOY: READY</span>
+                  <span className="text-gray-400 font-bold">2.4ms</span>
+                </div>
+              </div>
+            </figure>
+          </aside>
+
+          <article className="max-w-xl text-left space-y-6 pointer-events-auto bg-white/80 p-8 rounded-2xl border border-gray-200/50 shadow-xl backdrop-blur-md order-1 md:order-2">
             <span className="text-[10px] font-mono font-bold text-[#5956c8] uppercase tracking-widest block">
               SCENE_06 // PROJECTS PIPELINE
             </span>
@@ -814,12 +921,12 @@ export default function HomePageClient({
             <Link href="/studio" className="inline-block text-xs font-bold text-[#5956c8] hover:text-[#413eaf] font-mono">
               INSPECT CORE STUDIO WORK &rarr;
             </Link>
-          </div>
+          </article>
         </section>
 
         {/* Scene 07: OS Resources Grid */}
-        <section className="narrative-layer min-h-screen flex items-center justify-start px-6 md:px-24">
-          <div className="max-w-xl text-left space-y-6 pointer-events-auto bg-white/80 p-8 rounded-2xl border border-gray-200/50 shadow-xl backdrop-blur-md">
+        <section className="narrative-layer min-h-screen grid grid-cols-1 md:grid-cols-2 gap-12 items-center px-6 md:px-24">
+          <article className="max-w-xl text-left space-y-6 pointer-events-auto bg-white/80 p-8 rounded-2xl border border-gray-200/50 shadow-xl backdrop-blur-md">
             <span className="text-[10px] font-mono font-bold text-[#5956c8] uppercase tracking-widest block">
               SCENE_07 // KNOWLEDGE VAULT
             </span>
@@ -832,12 +939,22 @@ export default function HomePageClient({
             <Link href="/resources" className="inline-block text-xs font-bold text-[#5956c8] hover:text-[#413eaf] font-mono">
               VAULT TERMINAL ENTRANCE &rarr;
             </Link>
-          </div>
+          </article>
+
+          <aside className="flex justify-center items-center pointer-events-auto perspective-wrapper">
+            <figure className="relative w-64 h-64 block-3d transform-gpu flex items-center justify-center">
+              <div className="absolute w-44 h-44 rounded-full border-2 border-dashed border-[#5956c8]/40 animate-spin" style={{ animationDuration: "16s" }} />
+              <div className="absolute w-32 h-32 rounded-full border-2 border-dashed border-[#10B981]/50 animate-spin" style={{ animationDuration: "8s", animationDirection: "reverse" }} />
+              <div className="absolute w-20 h-20 rounded-full border-2 border-[#D946EF]/30 flex items-center justify-center bg-white shadow-xl">
+                <span className="font-mono text-[9px] font-bold text-gray-900">VAULT</span>
+              </div>
+            </figure>
+          </aside>
         </section>
 
         {/* Scene 08: Future Roadmap Heights */}
         <section className="narrative-layer min-h-screen flex items-center justify-center px-6 md:px-24">
-          <div className="max-w-2xl text-center space-y-8 pointer-events-auto bg-white/90 p-12 rounded-3xl border border-gray-250 shadow-2xl backdrop-blur-md">
+          <article className="max-w-2xl text-center space-y-8 pointer-events-auto bg-white/90 p-12 rounded-3xl border border-gray-250 shadow-2xl backdrop-blur-md">
             <span className="text-[10px] font-mono font-bold text-[#5956c8] uppercase tracking-widest block">
               SCENE_08 // ROADMAP TARGETS
             </span>
@@ -856,10 +973,10 @@ export default function HomePageClient({
                 Milestones Board
               </Link>
             </div>
-          </div>
+          </article>
         </section>
 
-      </div>
+      </main>
     </div>
   );
 }
