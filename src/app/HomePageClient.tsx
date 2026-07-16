@@ -138,7 +138,7 @@ export default function HomePageClient({
         y: (Math.random() - 0.5) * 50,
         z: (Math.random() - 0.5) * 50,
         tx: coord.x, ty: coord.y, tz: coord.z,
-        color: "#8B88F8",
+        color: "#5956c8",
         size: 4,
         label: i === 0 ? "GENESIS_ROOT" : `NODE_0${i}`,
         type: "genesis"
@@ -152,7 +152,7 @@ export default function HomePageClient({
         y: (Math.random() - 0.5) * 100,
         z: (Math.random() - 0.5) * 100,
         tx: 0, ty: 0, tz: 0,
-        color: m.checkedIn ? "#89F336" : "#DAD9FC",
+        color: m.checkedIn ? "#10B981" : "#A5B4FC",
         size: 5,
         label: m.name.split(" ")[0].toUpperCase(),
         type: "member",
@@ -167,7 +167,7 @@ export default function HomePageClient({
         y: (Math.random() - 0.5) * 120,
         z: (Math.random() - 0.5) * 120,
         tx: 0, ty: 0, tz: 0,
-        color: "#89F336",
+        color: "#4F46E5",
         size: 6,
         label: pr.title.split(" ")[0].toUpperCase(),
         type: "program",
@@ -182,7 +182,7 @@ export default function HomePageClient({
         y: (Math.random() - 0.5) * 150,
         z: (Math.random() - 0.5) * 150,
         tx: 0, ty: 0, tz: 0,
-        color: "#FFFFFF",
+        color: "#111111",
         size: 5.5,
         label: proj.client.toUpperCase(),
         type: "project",
@@ -197,7 +197,7 @@ export default function HomePageClient({
         y: (Math.random() - 0.5) * 180,
         z: (Math.random() - 0.5) * 180,
         tx: 0, ty: 0, tz: 0,
-        color: "#8B88F8",
+        color: "#D946EF",
         size: 4.5,
         label: partner.name.toUpperCase(),
         type: "partner",
@@ -600,7 +600,19 @@ export default function HomePageClient({
   }, []);
 
   return (
-    <div className="relative w-full min-h-[800vh] bg-[#111111] text-white overflow-hidden font-sans">
+    <div className="relative w-full min-h-[800vh] bg-[#fafafc] text-gray-900 overflow-hidden font-sans">
+      {/* Premium light-theme animated mesh background */}
+      <div className="absolute inset-0 z-0 pointer-events-none overflow-hidden">
+        {/* Soft grid overlay */}
+        <div className="absolute inset-0 opacity-[0.25] bg-[linear-gradient(to_right,#dad9fc_1px,transparent_1px),linear-gradient(to_bottom,#dad9fc_1px,transparent_1px)] bg-[size:50px_50px]" />
+        
+        {/* Dynamic mesh gradients */}
+        <div className="absolute top-[5%] left-[-10%] w-[60vw] h-[60vw] rounded-full bg-gradient-to-tr from-[#8B88F8]/12 via-[#8B88F8]/6 to-[#89F336]/4 blur-3xl opacity-60 animate-float" />
+        <div className="absolute top-[25%] right-[-10%] w-[70vw] h-[70vw] rounded-full bg-gradient-to-br from-[#8B88F8]/6 via-[#3B82F6]/10 to-[#89F336]/4 blur-3xl opacity-50" style={{ animationDelay: "2s" }} />
+        <div className="absolute top-[50%] left-[-15%] w-[80vw] h-[80vw] rounded-full bg-gradient-to-tr from-[#3B82F6]/8 via-[#8B88F8]/10 to-transparent blur-3xl opacity-50 animate-float" style={{ animationDuration: "12s" }} />
+        <div className="absolute top-[75%] right-[-20%] w-[70vw] h-[70vw] rounded-full bg-gradient-to-br from-[#D946EF]/8 via-[#8B88F8]/10 to-transparent blur-3xl opacity-40 animate-float" style={{ animationDuration: "15s" }} />
+        <div className="absolute bottom-[-10%] left-[10%] w-[60vw] h-[60vw] rounded-full bg-gradient-to-tr from-[#8B88F8]/15 via-[#89F336]/8 to-[#fbfbfe] blur-3xl opacity-60 animate-float" />
+      </div>
       
       {/* Fullscreen Master 3D Rendering Canvas */}
       <div className="fixed inset-0 w-full h-full z-10 pointer-events-none">
@@ -617,12 +629,12 @@ export default function HomePageClient({
 
       {/* Interactive side information panel */}
       {selectedItem && (
-        <div className="fixed top-28 right-8 z-30 w-72 bg-[#171717] border border-white/5 p-6 rounded-2xl backdrop-blur-md animate-scale-up text-left max-h-[70vh] overflow-y-auto">
-          <div className="flex justify-between items-center pb-3 border-b border-white/5 mb-4">
-            <span className="font-mono text-[8px] text-[#89F336] uppercase">NODE_METRICS_SPEC</span>
+        <div className="fixed top-28 right-8 z-30 w-72 bg-white/95 border border-gray-200/50 p-6 rounded-2xl shadow-2xl backdrop-blur-md animate-scale-up text-left max-h-[70vh] overflow-y-auto text-gray-900">
+          <div className="flex justify-between items-center pb-3 border-b border-gray-100 mb-4">
+            <span className="font-mono text-[8px] text-[#5956c8] uppercase font-bold">NODE_METRICS_SPEC</span>
             <button 
               onClick={() => setSelectedItem(null)}
-              className="text-gray-500 hover:text-white cursor-pointer font-mono text-[9px]"
+              className="text-gray-400 hover:text-gray-900 cursor-pointer font-mono text-[9px] font-bold"
             >
               [CLOSE]
             </button>
@@ -633,13 +645,13 @@ export default function HomePageClient({
               const member = selectedItem as Member;
               return (
                 <div className="space-y-4">
-                  <h4 className="font-black text-white text-base leading-tight">{member.name}</h4>
-                  <p className="font-mono text-[9px] text-[#8B88F8]">{member.role}</p>
-                  <div className="p-3 bg-black/40 rounded-lg border border-white/5 space-y-2 font-mono text-[8px] text-gray-400">
-                    <span className="block border-b border-white/5 pb-1 text-white font-bold">CAPABILITIES</span>
+                  <h4 className="font-black text-gray-900 text-base leading-tight">{member.name}</h4>
+                  <p className="font-mono text-[9px] text-[#5956c8] font-bold">{member.role}</p>
+                  <div className="p-3 bg-gray-50 rounded-lg border border-gray-100 space-y-2 font-mono text-[8px] text-gray-500">
+                    <span className="block border-b border-gray-150 pb-1 text-gray-900 font-bold">CAPABILITIES</span>
                     <div className="flex flex-wrap gap-1">
                       {member.skills.map((s: string) => (
-                        <span key={s} className="px-1.5 py-0.5 rounded bg-white/5 text-gray-300">#{s}</span>
+                        <span key={s} className="px-1.5 py-0.5 rounded bg-gray-200/60 text-gray-700 font-medium">#{s}</span>
                       ))}
                     </div>
                   </div>
@@ -649,9 +661,9 @@ export default function HomePageClient({
               const project = selectedItem as Project;
               return (
                 <div className="space-y-4">
-                  <h4 className="font-black text-white text-base leading-tight">{project.title}</h4>
-                  <p className="font-mono text-[9px] text-gray-500">Client: {project.client}</p>
-                  <div className="space-y-2 text-xs text-gray-400">
+                  <h4 className="font-black text-gray-900 text-base leading-tight">{project.title}</h4>
+                  <p className="font-mono text-[9px] text-gray-500 font-bold">Client: {project.client}</p>
+                  <div className="space-y-2 text-xs text-gray-600 leading-relaxed">
                     <p><strong>Challenge:</strong> {project.challenge}</p>
                     <p><strong>Solution:</strong> {project.solution}</p>
                   </div>
@@ -661,11 +673,11 @@ export default function HomePageClient({
               const partner = selectedItem as Partner;
               return (
                 <div className="space-y-4">
-                  <h4 className="font-black text-white text-base leading-tight">{partner.name}</h4>
-                  <span className="px-2 py-0.5 rounded bg-[#8B88F8]/10 border border-[#8B88F8]/20 text-[#8B88F8] font-mono text-[8px] uppercase">{partner.type}</span>
+                  <h4 className="font-black text-gray-900 text-base leading-tight">{partner.name}</h4>
+                  <span className="px-2 py-0.5 rounded bg-[#5956c8]/10 border border-[#5956c8]/20 text-[#5956c8] font-mono text-[8px] font-bold uppercase">{partner.type}</span>
                   <a 
                     href={partner.website} target="_blank" rel="noopener noreferrer"
-                    className="block text-center py-2.5 bg-white text-black font-bold text-xs uppercase tracking-wider rounded-lg font-mono"
+                    className="block text-center py-2.5 bg-gray-900 hover:bg-gray-800 text-white font-bold text-xs uppercase tracking-wider rounded-lg font-mono transition-all shadow-md"
                   >
                     OPEN WEBSITE &rarr;
                   </a>
@@ -675,9 +687,9 @@ export default function HomePageClient({
               const program = selectedItem as Program;
               return (
                 <div className="space-y-4">
-                  <h4 className="font-black text-white text-base leading-tight">{program.title}</h4>
-                  <p className="font-mono text-[9px] text-[#89F336]">{program.tagline}</p>
-                  <p className="text-xs text-gray-400 leading-relaxed">{program.description}</p>
+                  <h4 className="font-black text-gray-900 text-base leading-tight">{program.title}</h4>
+                  <p className="font-mono text-[9px] text-[#10B981] font-bold">{program.tagline}</p>
+                  <p className="text-xs text-gray-600 leading-relaxed">{program.description}</p>
                 </div>
               );
             }
@@ -692,18 +704,19 @@ export default function HomePageClient({
 
         {/* Scene 01: The Ecosystem Awakens */}
         <section className="narrative-layer min-h-screen flex items-center justify-start px-6 md:px-24">
-          <div className="max-w-xl text-left space-y-6 pointer-events-auto bg-[#111111]/85 p-8 rounded-2xl border border-white/5 backdrop-blur-md">
-            <span className="text-[10px] font-mono font-bold text-[#89F336] uppercase tracking-widest block">
-              SCENE_01 // THE AWAKENING
+          <div className="max-w-2xl text-left space-y-6 pointer-events-auto bg-white/80 p-10 md:p-12 rounded-3xl border border-gray-200/50 shadow-2xl backdrop-blur-md">
+            <span className="text-[10px] font-mono font-bold text-[#5956c8] uppercase tracking-widest block mb-1">
+              INTRODUCING // LAYERZ GROUP
             </span>
-            <h1 className="text-4xl md:text-6xl font-black tracking-tight leading-none text-white">
-              Building the Next Layer of Innovation.
+            <h1 className="text-5xl md:text-7xl font-black tracking-tight leading-none text-gray-900">
+              <span className="block text-[#5956c8]">Layerz Group</span>
+              <span className="text-3xl md:text-5xl font-black block mt-2 text-gray-600 leading-tight">Building the Next Layer of Innovation</span>
             </h1>
-            <p className="text-xs text-gray-400 leading-relaxed">
+            <p className="text-sm text-gray-600 leading-relaxed">
               Layerz is a global innovation ecosystem empowering builders, creators, startups, and communities through technology, design, education, and collaboration.
             </p>
-            <div className="flex gap-4">
-              <Link href="/ecosystem" className="px-6 py-3 rounded-lg bg-white text-black hover:bg-[#89F336] hover:text-black font-bold text-xs uppercase tracking-wider transition-colors font-mono">
+            <div className="flex gap-4 pt-2">
+              <Link href="/ecosystem" className="px-6 py-3.5 rounded-lg bg-gray-900 text-white hover:bg-[#5956c8] transition-colors font-bold text-xs uppercase tracking-wider font-mono shadow-md">
                 Explore Ecosystem
               </Link>
             </div>
@@ -712,17 +725,17 @@ export default function HomePageClient({
 
         {/* Scene 02: Networks Assemble */}
         <section className="narrative-layer min-h-screen flex items-center justify-end px-6 md:px-24">
-          <div className="max-w-xl text-left space-y-6 pointer-events-auto bg-[#111111]/85 p-8 rounded-2xl border border-white/5 backdrop-blur-md">
-            <span className="text-[10px] font-mono font-bold text-[#8B88F8] uppercase tracking-widest block">
+          <div className="max-w-xl text-left space-y-6 pointer-events-auto bg-white/80 p-8 rounded-2xl border border-gray-200/50 shadow-xl backdrop-blur-md">
+            <span className="text-[10px] font-mono font-bold text-[#5956c8] uppercase tracking-widest block">
               SCENE_02 // ASSEMBLY PROTOCOL
             </span>
-            <h2 className="text-3xl md:text-5xl font-black text-white leading-none tracking-tight">
+            <h2 className="text-3xl md:text-5xl font-black text-gray-900 leading-tight tracking-tight">
               More Than a Company. An Ecosystem.
             </h2>
-            <p className="text-xs text-gray-400 leading-relaxed">
+            <p className="text-xs text-gray-600 leading-relaxed">
               Layerz exists to empower the next generation of innovators. We believe that great products, thriving communities, and impactful startups are built layer by layer—not overnight.
             </p>
-            <Link href="/about" className="inline-block text-xs font-bold text-[#89F336] hover:underline font-mono">
+            <Link href="/about" className="inline-block text-xs font-bold text-[#5956c8] hover:text-[#413eaf] font-mono">
               OPEN CONTRIBUTOR REGISTRY &rarr;
             </Link>
           </div>
@@ -730,23 +743,23 @@ export default function HomePageClient({
 
         {/* Scene 03: Programs Emerge */}
         <section className="narrative-layer min-h-screen flex items-center justify-start px-6 md:px-24">
-          <div className="max-w-xl text-left space-y-6 pointer-events-auto bg-[#111111]/85 p-8 rounded-2xl border border-white/5 backdrop-blur-md">
-            <span className="text-[10px] font-mono font-bold text-[#89F336] uppercase tracking-widest block">
+          <div className="max-w-xl text-left space-y-6 pointer-events-auto bg-white/80 p-8 rounded-2xl border border-gray-200/50 shadow-xl backdrop-blur-md">
+            <span className="text-[10px] font-mono font-bold text-[#5956c8] uppercase tracking-widest block">
               SCENE_03 // ARCHITECTURAL DRAFT
             </span>
-            <h2 className="text-3xl md:text-5xl font-black text-white leading-none tracking-tight">
+            <h2 className="text-3xl md:text-5xl font-black text-gray-900 leading-tight tracking-tight">
               One Ecosystem. Infinite Possibilities.
             </h2>
-            <p className="text-xs text-gray-400 leading-relaxed">
+            <p className="text-xs text-gray-600 leading-relaxed">
               Every initiative within Layerz is designed to solve a different part of the innovation journey. From education to labs research to ventures incubation.
             </p>
             <div className="grid grid-cols-2 gap-4 pt-2 font-mono text-[10px] text-gray-500">
               <div>
-                <p className="text-white font-bold">L_01: FOUNDATION</p>
+                <p className="text-gray-900 font-bold">L_01: FOUNDATION</p>
                 <p>Empowering students and local campus chapters.</p>
               </div>
               <div>
-                <p className="text-white font-bold">L_02: STUDIO</p>
+                <p className="text-gray-900 font-bold">L_02: STUDIO</p>
                 <p>Designing digital brands & Next.js systems.</p>
               </div>
             </div>
@@ -755,17 +768,17 @@ export default function HomePageClient({
 
         {/* Scene 04: Events become memories */}
         <section className="narrative-layer min-h-screen flex items-center justify-end px-6 md:px-24">
-          <div className="max-w-xl text-left space-y-6 pointer-events-auto bg-[#111111]/85 p-8 rounded-2xl border border-white/5 backdrop-blur-md">
-            <span className="text-[10px] font-mono font-bold text-[#8B88F8] uppercase tracking-widest block">
+          <div className="max-w-xl text-left space-y-6 pointer-events-auto bg-white/80 p-8 rounded-2xl border border-gray-200/50 shadow-xl backdrop-blur-md">
+            <span className="text-[10px] font-mono font-bold text-[#5956c8] uppercase tracking-widest block">
               SCENE_04 // KEYNOTE MEMORIES
             </span>
-            <h2 className="text-3xl md:text-5xl font-black text-white leading-none tracking-tight">
+            <h2 className="text-3xl md:text-5xl font-black text-gray-900 leading-tight tracking-tight">
               Ecosystem Chapters & Hackathons
             </h2>
-            <p className="text-xs text-gray-400 leading-relaxed">
+            <p className="text-xs text-gray-600 leading-relaxed">
               Connect with leading protocol builders. Apply to coordinate campus workshops, builder demo sessions, and open-source events.
             </p>
-            <Link href="/events" className="inline-block text-xs font-bold text-[#8B88F8] hover:underline font-mono">
+            <Link href="/events" className="inline-block text-xs font-bold text-[#5956c8] hover:text-[#413eaf] font-mono">
               INSPECT EVENTS INDEX &rarr;
             </Link>
           </div>
@@ -773,14 +786,14 @@ export default function HomePageClient({
 
         {/* Scene 05: Partners Connected Nodes */}
         <section className="narrative-layer min-h-screen flex items-center justify-start px-6 md:px-24">
-          <div className="max-w-xl text-left space-y-6 pointer-events-auto bg-[#111111]/85 p-8 rounded-2xl border border-white/5 backdrop-blur-md">
-            <span className="text-[10px] font-mono font-bold text-[#89F336] uppercase tracking-widest block">
+          <div className="max-w-xl text-left space-y-6 pointer-events-auto bg-white/80 p-8 rounded-2xl border border-gray-200/50 shadow-xl backdrop-blur-md">
+            <span className="text-[10px] font-mono font-bold text-[#5956c8] uppercase tracking-widest block">
               SCENE_05 // RELATIONSHIP MAP
             </span>
-            <h2 className="text-3xl md:text-5xl font-black text-white leading-none tracking-tight">
+            <h2 className="text-3xl md:text-5xl font-black text-gray-900 leading-tight tracking-tight">
               Trusted by Industry Partners
             </h2>
-            <p className="text-xs text-gray-400 leading-relaxed">
+            <p className="text-xs text-gray-600 leading-relaxed">
               We collaborate with decentralized VC networks, university chapters, and protocol groups backing modular innovation.
             </p>
           </div>
@@ -788,17 +801,17 @@ export default function HomePageClient({
 
         {/* Scene 06: Studio Projects */}
         <section className="narrative-layer min-h-screen flex items-center justify-end px-6 md:px-24">
-          <div className="max-w-xl text-left space-y-6 pointer-events-auto bg-[#111111]/85 p-8 rounded-2xl border border-white/5 backdrop-blur-md">
-            <span className="text-[10px] font-mono font-bold text-[#8B88F8] uppercase tracking-widest block">
+          <div className="max-w-xl text-left space-y-6 pointer-events-auto bg-white/80 p-8 rounded-2xl border border-gray-200/50 shadow-xl backdrop-blur-md">
+            <span className="text-[10px] font-mono font-bold text-[#5956c8] uppercase tracking-widest block">
               SCENE_06 // PROJECTS PIPELINE
             </span>
-            <h2 className="text-3xl md:text-5xl font-black text-white leading-none tracking-tight">
+            <h2 className="text-3xl md:text-5xl font-black text-gray-900 leading-tight tracking-tight">
               Studio Scopes Build Themselves
             </h2>
-            <p className="text-xs text-gray-400 leading-relaxed">
+            <p className="text-xs text-gray-600 leading-relaxed">
               From web app frontends to custom AI agent pipelines and Smart Account Solidity codes, see our selected client deployments.
             </p>
-            <Link href="/studio" className="inline-block text-xs font-bold text-[#89F336] hover:underline font-mono">
+            <Link href="/studio" className="inline-block text-xs font-bold text-[#5956c8] hover:text-[#413eaf] font-mono">
               INSPECT CORE STUDIO WORK &rarr;
             </Link>
           </div>
@@ -806,17 +819,17 @@ export default function HomePageClient({
 
         {/* Scene 07: OS Resources Grid */}
         <section className="narrative-layer min-h-screen flex items-center justify-start px-6 md:px-24">
-          <div className="max-w-xl text-left space-y-6 pointer-events-auto bg-[#111111]/85 p-8 rounded-2xl border border-white/5 backdrop-blur-md">
-            <span className="text-[10px] font-mono font-bold text-[#89F336] uppercase tracking-widest block">
+          <div className="max-w-xl text-left space-y-6 pointer-events-auto bg-white/80 p-8 rounded-2xl border border-gray-200/50 shadow-xl backdrop-blur-md">
+            <span className="text-[10px] font-mono font-bold text-[#5956c8] uppercase tracking-widest block">
               SCENE_07 // KNOWLEDGE VAULT
             </span>
-            <h2 className="text-3xl md:text-5xl font-black text-white leading-none tracking-tight">
+            <h2 className="text-3xl md:text-5xl font-black text-gray-900 leading-tight tracking-tight">
               Playbooks & Brand Identity Kits
             </h2>
-            <p className="text-xs text-gray-400 leading-relaxed">
+            <p className="text-xs text-gray-600 leading-relaxed">
               Access guidelines, copy colorways swatches, and inspect vector brandmarks blueprints directly.
             </p>
-            <Link href="/resources" className="inline-block text-xs font-bold text-[#8B88F8] hover:underline font-mono">
+            <Link href="/resources" className="inline-block text-xs font-bold text-[#5956c8] hover:text-[#413eaf] font-mono">
               VAULT TERMINAL ENTRANCE &rarr;
             </Link>
           </div>
@@ -824,22 +837,22 @@ export default function HomePageClient({
 
         {/* Scene 08: Future Roadmap Heights */}
         <section className="narrative-layer min-h-screen flex items-center justify-center px-6 md:px-24">
-          <div className="max-w-2xl text-center space-y-8 pointer-events-auto bg-[#111111]/90 p-12 rounded-3xl border border-white/10 backdrop-blur-md">
-            <span className="text-[10px] font-mono font-bold text-[#89F336] uppercase tracking-widest block">
+          <div className="max-w-2xl text-center space-y-8 pointer-events-auto bg-white/90 p-12 rounded-3xl border border-gray-250 shadow-2xl backdrop-blur-md">
+            <span className="text-[10px] font-mono font-bold text-[#5956c8] uppercase tracking-widest block">
               SCENE_08 // ROADMAP TARGETS
             </span>
-            <h2 className="text-4xl md:text-6xl font-black text-white leading-none tracking-tight">
+            <h2 className="text-4xl md:text-6xl font-black text-gray-900 leading-none tracking-tight">
               Ready to Build the Future?
             </h2>
-            <p className="text-xs text-gray-400 leading-relaxed max-w-lg mx-auto">
+            <p className="text-xs text-gray-600 leading-relaxed max-w-lg mx-auto">
               Whether you&apos;re a student, developer, designer, founder, researcher, or organization, Layerz is where ambitious people come together to create meaningful impact.
             </p>
             
             <div className="flex justify-center gap-4 pt-4">
-              <Link href="/join" className="px-8 py-4 bg-[#89F336] text-[#111111] hover:bg-white transition-colors font-bold text-xs uppercase tracking-widest rounded-lg font-mono">
+              <Link href="/join" className="px-8 py-4 bg-gray-900 text-white hover:bg-[#5956c8] transition-colors font-bold text-xs uppercase tracking-widest rounded-lg font-mono shadow-md">
                 Apply to Chapters
               </Link>
-              <Link href="/roadmap" className="px-8 py-4 border border-white/20 hover:bg-white/5 transition-colors text-white text-xs font-bold uppercase tracking-widest rounded-lg font-mono">
+              <Link href="/roadmap" className="px-8 py-4 border border-gray-300 hover:bg-gray-100 transition-colors text-gray-900 text-xs font-bold uppercase tracking-widest rounded-lg font-mono">
                 Milestones Board
               </Link>
             </div>
