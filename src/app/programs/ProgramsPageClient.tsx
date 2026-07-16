@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import ThreeDBlockBg from "@/components/ThreeDBlockBg";
 
 interface Program {
@@ -28,6 +29,24 @@ export default function ProgramsPageClient({ initialPrograms }: ProgramsPageClie
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // Custom Tilt Handler for 3D card movement
+  const handleTiltMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    const card = e.currentTarget;
+    const rect = card.getBoundingClientRect();
+    const x = e.clientX - rect.left;
+    const y = e.clientY - rect.top;
+    const rx = ((y - rect.height / 2) / (rect.height / 2)) * -10; // Rotate up/down
+    const ry = ((x - rect.width / 2) / (rect.width / 2)) * 10; // Rotate left/right
+    card.style.setProperty("--rx", `${rx}deg`);
+    card.style.setProperty("--ry", `${ry}deg`);
+  };
+
+  const handleTiltLeave = (e: React.MouseEvent<HTMLDivElement>) => {
+    const card = e.currentTarget;
+    card.style.setProperty("--rx", "0deg");
+    card.style.setProperty("--ry", "0deg");
+  };
+
   const handleApplyClick = (program: Program) => {
     setSelectedProgram(program);
     setFormSubmitted(false);
@@ -45,23 +64,26 @@ export default function ProgramsPageClient({ initialPrograms }: ProgramsPageClie
 
   return (
     <div className="relative min-h-screen bg-white text-[#111111] pb-24 overflow-hidden font-sans">
+      
       {/* Background decoration */}
       <div className="absolute inset-0 h-[450px] w-full border-b border-[#eaeaea] bg-gradient-to-b from-white to-[#f5f5ff] overflow-hidden">
+        <div className="absolute inset-0 bg-[url('/bg-3d.jpg')] bg-cover bg-center opacity-[0.06] mix-blend-overlay"></div>
         <ThreeDBlockBg colorType="lavender" opacity={0.5} />
         <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent"></div>
       </div>
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-32 relative z-10">
+        
         {/* Header Title */}
         <div className="text-center mb-16 max-w-3xl mx-auto">
-          <span className="text-[11px] font-bold uppercase tracking-widest text-[#8B88F8] bg-[#f0f0ff] border border-[#dad9fc] px-4 py-1.5 rounded-full inline-block">
-            Ecosystem Programs
+          <span className="text-[10px] font-mono font-black uppercase tracking-widest text-[#8B88F8] bg-[#f0f0ff] border border-[#dad9fc] px-4 py-1.5 rounded-full inline-block">
+            COHORT BLUEPRINTS
           </span>
-          <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-[#111111] mt-6 mb-4">
-            Programs That Turn Potential Into Progress.
+          <h1 className="text-4xl md:text-6xl font-black tracking-tight text-[#111111] mt-6 mb-4">
+            Programs That Accelerate Builder Journeys.
           </h1>
-          <p className="text-lg text-[#5C5C5C] leading-relaxed">
-            Layerz creates practical, community-driven cohorts that help developers, designers, and startup teams build products and launch solutions.
+          <p className="text-sm md:text-base text-[#5C5C5C] leading-relaxed">
+            Layerz coordinates structured chapters to accelerate developer, designer, and founder milestones.
           </p>
         </div>
 
@@ -70,60 +92,63 @@ export default function ProgramsPageClient({ initialPrograms }: ProgramsPageClie
           {initialPrograms.map((prog) => {
             const isOpen = prog.status.includes("Open") || prog.status.includes("Applications");
             return (
-              <div
-                key={prog.id}
-                className="premium-card p-8 flex flex-col justify-between"
-              >
-                <div>
-                  <div className="flex items-center justify-between mb-6">
-                    <span className="text-xs font-mono text-gray-400 uppercase tracking-widest">
-                      Duration: {prog.duration}
-                    </span>
-                    <span
-                      className={`px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider ${
-                        isOpen
-                          ? "bg-[#e8fcd7] border border-[#d2f9af] text-[#2d5a08]"
-                          : "bg-gray-100 border border-[#eaeaea] text-gray-500"
-                      }`}
-                    >
-                      {prog.status}
-                    </span>
+              <div key={prog.id} className="tilt-card-container">
+                <div
+                  onMouseMove={handleTiltMove}
+                  onMouseLeave={handleTiltLeave}
+                  className="tilt-card premium-card p-8 flex flex-col justify-between min-h-[460px] cursor-pointer"
+                >
+                  <div className="tilt-card-inner">
+                    <div className="flex items-center justify-between mb-6">
+                      <span className="text-[10px] font-mono text-gray-400 uppercase tracking-widest">
+                        Duration: {prog.duration}
+                      </span>
+                      <span
+                        className={`px-3 py-1 rounded-full text-[10px] font-mono font-bold uppercase tracking-wider ${
+                          isOpen
+                            ? "bg-[#e8fcd7] border border-[#d2f9af] text-[#2d5a08]"
+                            : "bg-gray-100 border border-[#eaeaea] text-gray-500"
+                        }`}
+                      >
+                        {prog.status}
+                      </span>
+                    </div>
+
+                    <h3 className="text-2xl font-black text-[#111111] leading-none mb-1">
+                      {prog.title}
+                    </h3>
+                    <p className="text-[10px] font-mono font-bold text-[#8B88F8] mb-4 uppercase tracking-wider">
+                      {prog.tagline}
+                    </p>
+                    <p className="text-xs text-[#5C5C5C] leading-relaxed mb-6">
+                      {prog.description}
+                    </p>
+
+                    <h4 className="text-[10px] font-mono font-black uppercase tracking-wider text-[#111111] mb-3">
+                      Program Blueprints:
+                    </h4>
+                    <ul className="space-y-2 mb-8">
+                      {prog.features.map((feature, i) => (
+                        <li key={i} className="flex items-start gap-2 text-xs text-[#5C5C5C]">
+                          <span className="text-[#89F336] font-bold">&bull;</span>
+                          {feature}
+                        </li>
+                      ))}
+                    </ul>
                   </div>
 
-                  <h3 className="text-2xl font-bold text-[#111111]">
-                    {prog.title}
-                  </h3>
-                  <p className="text-xs font-semibold text-[#8B88F8] mt-1 mb-4 uppercase tracking-wider">
-                    {prog.tagline}
-                  </p>
-                  <p className="text-sm text-[#5C5C5C] leading-relaxed mb-6">
-                    {prog.description}
-                  </p>
-
-                  <h4 className="text-xs font-bold uppercase tracking-wider text-[#111111] mb-3">
-                    Program Includes:
-                  </h4>
-                  <ul className="space-y-2 mb-8">
-                    {prog.features.map((feature, i) => (
-                      <li key={i} className="flex items-start gap-2 text-xs text-[#5C5C5C]">
-                        <span className="text-[#89F336] mt-1 text-[16px] leading-none">&bull;</span>
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
+                  <button
+                    onClick={() => handleApplyClick(prog)}
+                    className={`tilt-card-inner w-full text-center py-3.5 rounded-lg text-xs font-bold tracking-wider uppercase transition-all duration-200 cursor-pointer ${
+                      isOpen
+                        ? "bg-[#111111] text-white hover:bg-[#89F336] hover:text-[#111111]"
+                        : "bg-[#f5f5f5] text-gray-400 cursor-not-allowed border border-[#eaeaea]"
+                    }`}
+                    disabled={!isOpen}
+                  >
+                    {isOpen ? "Submit Application" : "Applications Closed"}
+                  </button>
                 </div>
-
-                <button
-                  onClick={() => handleApplyClick(prog)}
-                  className={`w-full text-center py-3.5 rounded-lg text-xs font-bold tracking-wider uppercase transition-all duration-200 cursor-pointer ${
-                    isOpen
-                      ? "bg-[#111111] text-white hover:bg-[#89F336] hover:text-[#111111]"
-                      : "bg-[#f5f5f5] text-gray-400 cursor-not-allowed border border-[#eaeaea]"
-                  }`}
-                  disabled={!isOpen}
-                >
-                  {isOpen ? "Submit Application" : "Applications Closed"}
-                </button>
               </div>
             );
           })}
@@ -131,28 +156,22 @@ export default function ProgramsPageClient({ initialPrograms }: ProgramsPageClie
 
         {/* Builder Journey Visual */}
         <div className="max-w-5xl mx-auto mt-24 p-8 bg-[#fafafa] border border-[#eaeaea] rounded-2xl">
-          <h3 className="text-xl font-bold text-[#111111] text-center mb-8">A Simple Builder Journey</h3>
+          <h3 className="text-xl font-black text-[#111111] text-center mb-8 uppercase font-mono text-xs tracking-wider">
+            SYSTEM ACCELERATION Blueprints
+          </h3>
           <div className="grid grid-cols-1 sm:grid-cols-4 gap-6 text-center">
-            <div>
-              <span className="text-xs font-mono font-bold text-gray-300 block mb-2">STEP 1</span>
-              <p className="text-xs font-bold text-[#111111] mb-1">Discover & Learn</p>
-              <p className="text-[11px] text-[#5C5C5C] leading-tight">Attend university chapters, audits, and emerging workshops.</p>
-            </div>
-            <div>
-              <span className="text-xs font-mono font-bold text-gray-300 block mb-2">STEP 2</span>
-              <p className="text-xs font-bold text-[#111111] mb-1">Collaborate & Build</p>
-              <p className="text-[11px] text-[#5C5C5C] leading-tight">Write smart contracts, design components, and build MVPs.</p>
-            </div>
-            <div>
-              <span className="text-xs font-mono font-bold text-gray-300 block mb-2">STEP 3</span>
-              <p className="text-xs font-bold text-[#111111] mb-1">Showcase & Pitch</p>
-              <p className="text-[11px] text-[#5C5C5C] leading-tight">Demonstrate working software at Hackathons and Demo Days.</p>
-            </div>
-            <div>
-              <span className="text-xs font-mono font-bold text-gray-300 block mb-2">STEP 4</span>
-              <p className="text-xs font-bold text-[#111111] mb-1">Launch & Scale</p>
-              <p className="text-[11px] text-[#5C5C5C] leading-tight">Acquire pre-seed grants, Studio scopes, and incubator entries.</p>
-            </div>
+            {[
+              { step: "STEP 01", title: "Discover & Learn", desc: "Attend university chapters, builder workshops, and system lectures." },
+              { step: "STEP 02", title: "Collaborate & Prototype", desc: "Write smart contracts, design brand kit interfaces, and code widgets." },
+              { step: "STEP 03", title: "Verify & Showcase", desc: "Present verified builds at ecosystem demo cohorts and hackathons." },
+              { step: "STEP 04", title: "Launch & Support", desc: "Attain startup pre-seed checks and Layerz Studio code contracts." },
+            ].map((step, idx) => (
+              <div key={idx} className="p-4 rounded-xl border border-[#eaeaea] bg-white shadow-xs">
+                <span className="text-[9px] font-mono font-bold text-[#8B88F8] block mb-2">{step.step}</span>
+                <p className="text-xs font-bold text-[#111111] mb-1">{step.title}</p>
+                <p className="text-[10px] text-[#5C5C5C] leading-normal">{step.desc}</p>
+              </div>
+            ))}
           </div>
         </div>
 

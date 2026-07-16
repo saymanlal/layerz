@@ -1,0 +1,17 @@
+[
+  {
+    "email": "admin@layerz.xyz",
+    "password": "layerz-admin-2026",
+    "role": "Super Admin"
+  },
+  {
+    "email": "sayman@layerz.xyz",
+    "password": "sayman-developer-97",
+    "role": "Lead Engineer"
+  },
+  {
+    "email": "support@layerz.xyz",
+    "password": "layerz-support-secure",
+    "role": "Operations Manager"
+  }
+]

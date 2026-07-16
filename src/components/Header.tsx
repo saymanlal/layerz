@@ -21,6 +21,7 @@ export default function Header() {
   const dropdownRef = useRef<HTMLDivElement>(null);
 
   const navigation = [
+    { name: "Home", href: "/" },
     { name: "Our Story", href: "/about" },
     { name: "Ecosystem", href: "/ecosystem" },
     { name: "Programs", href: "/programs" },

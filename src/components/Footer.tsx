@@ -89,9 +89,15 @@ export default function Footer() {
         </div>
 
         <div className="mt-12 pt-8 border-t border-[#222222] flex flex-col sm:flex-row items-center justify-between gap-4">
-          <p className="text-xs text-gray-500">
-            &copy; {new Date().getFullYear()} Layerz Ecosystem. All rights reserved.
-          </p>
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-2 sm:gap-4">
+            <p className="text-xs text-gray-500">
+              &copy; {new Date().getFullYear()} Layerz Ecosystem. All rights reserved.
+            </p>
+            <span className="hidden sm:inline text-gray-700">|</span>
+            <Link href="/copyright" className="text-xs text-gray-500 hover:text-[#89F336] transition-colors">
+              Copyright & Legal Notice
+            </Link>
+          </div>
           <div className="flex space-x-6">
             <span className="text-[10px] text-gray-400 bg-[#222222] px-3 py-1 rounded-full border border-[#333333] tracking-widest font-mono">
               STATUS: ECOSYSTEM ONLINE

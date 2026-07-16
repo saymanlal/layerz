@@ -1,4 +1,6 @@
 import { NextResponse } from "next/server";
+import fs from "fs";
+import path from "path";
 
 export async function POST(request: Request) {
   try {
@@ -17,8 +19,8 @@ export async function POST(request: Request) {
     let isFallback = false;
     let warningMsg = "";
 
+    // 1. Try fetching access.json from private GitHub repo first if PAT is configured
     if (githubPat) {
-      // Try root first, then src/data/
       const pathsToTry = ["access.json", "src/data/access.json"];
       let accessFileFound = false;
 
@@ -31,7 +33,7 @@ export async function POST(request: Request) {
               "Accept": "application/vnd.github.v3.raw",
               "User-Agent": "Layerz-CMS"
             },
-            next: { revalidate: 0 } // Always bypass cache for auth credentials
+            next: { revalidate: 0 } // Always bypass cache for auth
           });
 
           if (res.status === 200) {
@@ -41,37 +43,51 @@ export async function POST(request: Request) {
             break;
           }
         } catch (err) {
-          console.error(`Failed to fetch auth credentials from ${filePath}:`, err);
+          console.error(`Failed to fetch auth credentials from GitHub ${filePath}:`, err);
         }
       }
 
-      if (accessFileFound) {
-        // Find matching credentials
+      if (accessFileFound && accessList.length > 0) {
         const match = accessList.find(
           (user: any) => user.email === email && user.password === password
         );
         if (match) {
           authenticated = true;
         }
-      } else {
-        // Fallback if access.json is missing on the private repo
-        isFallback = true;
-        warningMsg = `access.json was not found in the private repository '${githubRepo}'. Using default system credentials.`;
-        if (email === "admin@layerz.xyz" && password === "layerz-admin-2026") {
-          authenticated = true;
-        }
       }
-    } else {
-      // Local development or unconfigured env: allow default admin credentials
-      isFallback = true;
-      warningMsg = "GITHUB_PAT is not configured in environment variables. Using default system credentials.";
+    }
+
+    // 2. Double fallback: Check local src/data/access.json if GitHub query didn't match or was bypassed
+    if (!authenticated) {
+      try {
+        const localPath = path.join(process.cwd(), "src", "data", "access.json");
+        if (fs.existsSync(localPath)) {
+          const text = fs.readFileSync(localPath, "utf8");
+          const localAccessList = JSON.parse(text);
+          const match = localAccessList.find(
+            (user: any) => user.email === email && user.password === password
+          );
+          if (match) {
+            authenticated = true;
+            isFallback = true;
+            warningMsg = "Authenticated via local fallback credentials registry.";
+          }
+        }
+      } catch (err) {
+        console.error("Failed to read local credentials registry fallback:", err);
+      }
+    }
+
+    // 3. Last resort hardcoded fallback if everything else fails
+    if (!authenticated) {
       if (email === "admin@layerz.xyz" && password === "layerz-admin-2026") {
         authenticated = true;
+        isFallback = true;
+        warningMsg = "Authenticated via hardcoded root credentials.";
       }
     }
 
     if (authenticated) {
-      // Set a session cookie
       const response = NextResponse.json({
         success: true,
         message: "Authentication successful",
@@ -99,4 +115,14 @@ export async function POST(request: Request) {
   } catch (error: any) {
     return NextResponse.json({ error: error.message || "Authentication error" }, { status: 500 });
   }
+}
+
+export async function DELETE() {
+  const response = NextResponse.json({ success: true, message: "Logged out successfully" });
+  response.cookies.set("layerz_session", "", {
+    path: "/",
+    httpOnly: true,
+    expires: new Date(0)
+  });
+  return response;
 }

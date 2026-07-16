@@ -17,6 +17,11 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "Layerz | Global Innovation Ecosystem",
   description: "A premium hub for builders prototyping open infrastructure and launching decentralized solutions layer by layer.",
+  icons: {
+    icon: "/logo-org.jpg",
+    shortcut: "/logo-org.jpg",
+    apple: "/logo-org.jpg",
+  }
 };
 
 export default function RootLayout({
