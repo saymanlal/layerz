@@ -1081,6 +1081,7 @@ export default function AdminPortal() {
             </div>
           )}
         </main>
+      </div>
     </div>
   );
 }
