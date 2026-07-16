@@ -434,10 +434,7 @@ export default function HomePageClient({
       cam.yaw += (cam.tyaw - cam.yaw) * 0.05;
       cam.pitch += (cam.tpitch - cam.pitch) * 0.05;
 
-      const yawEl = document.getElementById("hud-camera-yaw");
-      if (yawEl) yawEl.innerText = cam.yaw.toFixed(4);
-      const pitchEl = document.getElementById("hud-camera-pitch");
-      if (pitchEl) pitchEl.innerText = cam.pitch.toFixed(4);
+
 
       const yawSway = cam.yaw + Math.sin(time * 0.4) * 0.06;
       const pitchSway = cam.pitch + Math.cos(time * 0.3) * 0.04;
@@ -619,13 +616,7 @@ export default function HomePageClient({
         <canvas ref={canvasRef} className="w-full h-full pointer-events-auto" />
       </div>
 
-      {/* Floating HUD System logs overlay */}
-      <div className="fixed top-24 left-8 z-30 font-mono text-[9px] text-gray-500 uppercase tracking-widest pointer-events-none space-y-1 hidden md:block">
-        <p>SYSTEM_CORE: ACTIVE_OK</p>
-        <p>ACTIVE_SCENE_COORDS: [LAYER_0{activeScene + 1}]</p>
-        <p>CAMERA_YAW: <span id="hud-camera-yaw">0.0000</span></p>
-        <p>CAMERA_PITCH: <span id="hud-camera-pitch">0.0000</span></p>
-      </div>
+
 
       {/* Interactive side information panel */}
       {selectedItem && (
@@ -703,21 +694,32 @@ export default function HomePageClient({
       <main className="relative z-20 pointer-events-none">
 
         {/* Scene 01: The Ecosystem Awakens */}
-        <section className="narrative-layer min-h-screen flex flex-col items-center justify-center px-6 text-center">
-          <header className="max-w-3xl space-y-6 pointer-events-auto bg-white/80 p-10 md:p-12 rounded-3xl border border-gray-200/50 shadow-2xl backdrop-blur-md mx-auto flex flex-col items-center">
-            <span className="text-[10px] font-mono font-bold text-[#5956c8] uppercase tracking-widest block mb-1">
-              INTRODUCING // LAYERZ GROUP
+        <section className="narrative-layer min-h-screen flex flex-col items-center justify-center px-6 relative overflow-hidden">
+          <header className="max-w-4xl text-center space-y-8 pointer-events-auto flex flex-col items-center justify-center relative">
+            {/* Holographic scanner top light */}
+            <div className="absolute top-[-50px] w-64 h-1 bg-[#8B88F8] blur-md opacity-50 pulsing-ring" />
+            
+            <span className="px-4 py-1.5 text-[10px] font-mono font-black uppercase tracking-widest text-[#5956c8] bg-[#5956c8]/5 border border-[#5956c8]/25 rounded-full inline-block animate-pulse">
+              INIT_STAGE // PROTOCOL_READY
             </span>
-            <h1 className="text-5xl md:text-7xl font-black tracking-tight leading-none text-gray-900">
-              <span className="block text-[#5956c8]">Layerz Group</span>
-              <span className="text-3xl md:text-5xl font-black block mt-2 text-gray-600 leading-tight">Building the Next Layer of Innovation</span>
+            
+            <h1 className="text-6xl md:text-8xl font-black tracking-tight leading-none text-gray-900 select-none flex flex-col gap-1">
+              <span className="block text-transparent bg-clip-text bg-gradient-to-r from-[#5956c8] via-[#8B88F8] to-[#10B981] animate-pulse">
+                Layerz Group
+              </span>
+              <span className="text-3xl md:text-6xl font-black block mt-4 text-gray-700 leading-tight max-w-3xl">
+                Building the Next Layer of <span className="underline decoration-wavy decoration-[#8B88F8]/60 underline-offset-8">Innovation</span>
+              </span>
             </h1>
-            <p className="text-sm text-gray-600 leading-relaxed max-w-xl mx-auto">
-              Layerz is a global innovation ecosystem empowering builders, creators, startups, and communities through technology, design, education, and collaboration.
+            
+            <p className="text-base text-gray-500 leading-relaxed max-w-xl mx-auto font-medium">
+              A decentralized global innovation ecosystem empowering developers, creators, and builders through technology, design, and systematic incubation.
             </p>
-            <div className="flex justify-center gap-4 pt-2">
-              <Link href="/ecosystem" className="px-6 py-3.5 rounded-lg bg-gray-900 text-white hover:bg-[#5956c8] transition-colors font-bold text-xs uppercase tracking-wider font-mono shadow-md">
-                Explore Ecosystem
+            
+            <div className="flex justify-center gap-4 pt-4 relative group">
+              <div className="absolute inset-0 bg-[#5956c8]/10 blur-xl rounded-lg opacity-50 group-hover:opacity-100 transition-opacity" />
+              <Link href="/ecosystem" className="relative z-10 px-8 py-4 rounded-lg bg-gray-900 text-white hover:bg-[#5956c8] transition-all font-bold text-xs uppercase tracking-widest font-mono shadow-xl hover:-translate-y-0.5">
+                Explore Ecosystem &rarr;
               </Link>
             </div>
           </header>
@@ -725,25 +727,51 @@ export default function HomePageClient({
 
         {/* Scene 02: Networks Assemble */}
         <section className="narrative-layer min-h-screen grid grid-cols-1 md:grid-cols-2 gap-12 items-center px-6 md:px-24">
-          <aside className="flex justify-center items-center pointer-events-auto perspective-wrapper order-2 md:order-1">
-            <figure className="relative w-64 h-64 block-3d hover:rotate-y-12 transform-gpu">
+          <aside className="w-full max-w-md md:max-w-lg h-[400px] flex justify-center items-center pointer-events-auto perspective-wrapper order-2 md:order-1">
+            <figure className="relative w-80 h-80 block-3d hover:rotate-y-12 transform-gpu animate-float">
+              {/* Glow backdrop inside the 3D container */}
+              <div className="absolute inset-0 bg-gradient-to-tr from-[#5956c8]/10 to-[#10B981]/10 rounded-full blur-3xl pointer-events-none" />
+              
               {/* Card 1: Lead Engineer */}
-              <div className="absolute top-0 left-0 w-44 bg-white/95 border border-gray-200 p-4 rounded-xl shadow-lg transform translate-z-[40px] rotate-y-[-10deg] hover:translate-z-[60px] transition-all duration-300">
-                <div className="w-8 h-8 rounded-full bg-[#5956c8] mb-2" />
-                <p className="font-bold text-[10px] text-gray-800">SARAH_DEV</p>
-                <p className="text-[8px] text-gray-500 font-mono">Lead Smart Contracts</p>
+              <div className="absolute top-0 left-0 w-56 bg-white/95 border border-gray-200 p-6 rounded-2xl shadow-xl transform translate-z-[60px] rotate-y-[-12deg] hover:translate-z-[90px] hover:scale-105 transition-all duration-500">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-[#5956c8] to-[#8B88F8] flex items-center justify-center text-white text-xs font-bold font-mono">S</div>
+                  <div>
+                    <h3 className="font-bold text-xs text-gray-800">SARAH_DEV</h3>
+                    <p className="text-[9px] text-[#5956c8] font-mono">Lead Smart Contracts</p>
+                  </div>
+                </div>
+                <div className="w-full bg-gray-100 h-1 rounded-full overflow-hidden">
+                  <div className="bg-[#5956c8] h-full w-4/5 animate-pulse" />
+                </div>
               </div>
+              
               {/* Card 2: Creative Designer */}
-              <div className="absolute top-12 left-20 w-44 bg-white/95 border border-gray-200 p-4 rounded-xl shadow-lg transform translate-z-[20px] rotate-x-[5deg] hover:translate-z-[40px] transition-all duration-300">
-                <div className="w-8 h-8 rounded-full bg-[#10B981] mb-2" />
-                <p className="font-bold text-[10px] text-gray-800">ALEX_DESIGN</p>
-                <p className="text-[8px] text-gray-500 font-mono">Creative Director</p>
+              <div className="absolute top-20 right-[-20px] w-56 bg-white/95 border border-gray-200 p-6 rounded-2xl shadow-xl transform translate-z-[30px] rotate-x-[8deg] hover:translate-z-[60px] hover:scale-105 transition-all duration-500">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-[#10B981] to-[#89F336] flex items-center justify-center text-white text-xs font-bold font-mono">A</div>
+                  <div>
+                    <h3 className="font-bold text-xs text-gray-800">ALEX_DESIGN</h3>
+                    <p className="text-[9px] text-[#10B981] font-mono">Creative Director</p>
+                  </div>
+                </div>
+                <div className="w-full bg-gray-100 h-1 rounded-full overflow-hidden">
+                  <div className="bg-[#10B981] h-full w-11/12 animate-pulse" />
+                </div>
               </div>
+
               {/* Card 3: Ecosystem Host */}
-              <div className="absolute top-28 left-8 w-44 bg-white/95 border border-gray-200 p-4 rounded-xl shadow-lg transform translate-z-[60px] rotate-z-[-5deg] hover:translate-z-[80px] transition-all duration-300">
-                <div className="w-8 h-8 rounded-full bg-[#D946EF] mb-2" />
-                <p className="font-bold text-[10px] text-gray-800">MIKE_OPS</p>
-                <p className="text-[8px] text-gray-500 font-mono">Chapter Coordinator</p>
+              <div className="absolute top-44 left-10 w-56 bg-white/95 border border-gray-200 p-6 rounded-2xl shadow-xl transform translate-z-[90px] rotate-z-[-6deg] hover:translate-z-[120px] hover:scale-105 transition-all duration-500">
+                <div className="flex items-center gap-3 mb-3">
+                  <div className="w-10 h-10 rounded-full bg-gradient-to-tr from-[#D946EF] to-[#8B88F8] flex items-center justify-center text-white text-xs font-bold font-mono">M</div>
+                  <div>
+                    <h3 className="font-bold text-xs text-gray-800">MIKE_OPS</h3>
+                    <p className="text-[9px] text-[#D946EF] font-mono">Chapter Coordinator</p>
+                  </div>
+                </div>
+                <div className="w-full bg-gray-100 h-1 rounded-full overflow-hidden">
+                  <div className="bg-[#D946EF] h-full w-2/3 animate-pulse" />
+                </div>
               </div>
             </figure>
           </aside>
@@ -762,9 +790,7 @@ export default function HomePageClient({
               OPEN CONTRIBUTOR REGISTRY &rarr;
             </Link>
           </article>
-        </section>
-
-        {/* Scene 03: Programs Emerge */}
+        </section>        {/* Scene 03: Programs Emerge */}
         <section className="narrative-layer min-h-screen grid grid-cols-1 md:grid-cols-2 gap-12 items-center px-6 md:px-24">
           <article className="max-w-xl text-left space-y-6 pointer-events-auto bg-white/80 p-8 rounded-2xl border border-gray-200/50 shadow-xl backdrop-blur-md">
             <span className="text-[10px] font-mono font-bold text-[#5956c8] uppercase tracking-widest block">
@@ -788,22 +814,33 @@ export default function HomePageClient({
             </div>
           </article>
 
-          <aside className="flex justify-center items-center pointer-events-auto perspective-wrapper">
-            <figure className="relative w-64 h-64 block-3d transform-gpu rotate-x-[35deg] rotate-z-[-20deg]">
-              {/* Layer 1 */}
-              <div className="absolute top-0 left-0 w-52 h-14 bg-white/95 border-2 border-[#5956c8] rounded-xl shadow-xl flex items-center justify-between px-4 transform translate-z-0 hover:translate-y-[-10px] transition-all">
-                <span className="font-mono text-[9px] font-bold text-gray-800">L_01 // FOUNDATION</span>
-                <span className="w-2 h-2 rounded-full bg-[#5956c8] pulsing-ring" />
+          <aside className="w-full max-w-md md:max-w-lg h-[400px] flex justify-center items-center pointer-events-auto perspective-wrapper">
+            <figure className="relative w-80 h-80 block-3d transform-gpu rotate-x-[38deg] rotate-z-[-22deg] animate-float">
+              {/* Stack Layer 1 */}
+              <div className="absolute top-0 left-0 w-72 h-20 bg-white/95 border-2 border-[#5956c8]/80 rounded-2xl shadow-2xl flex items-center justify-between px-6 transform translate-z-0 hover:-translate-y-4 transition-all duration-300">
+                <div className="flex items-center gap-4">
+                  <span className="p-2.5 rounded-lg bg-[#5956c8]/10 text-[#5956c8] font-mono text-[10px] font-bold">L_01</span>
+                  <span className="font-mono text-xs font-bold text-gray-800">FOUNDATION MODULE</span>
+                </div>
+                <span className="w-3 h-3 rounded-full bg-[#5956c8] pulsing-ring" />
               </div>
-              {/* Layer 2 */}
-              <div className="absolute top-16 left-4 w-52 h-14 bg-white/95 border-2 border-[#10B981] rounded-xl shadow-xl flex items-center justify-between px-4 transform translate-z-[30px] hover:translate-y-[-10px] transition-all">
-                <span className="font-mono text-[9px] font-bold text-gray-800">L_02 // STUDIO</span>
-                <span className="w-2 h-2 rounded-full bg-[#10B981] pulsing-ring" />
+              
+              {/* Stack Layer 2 */}
+              <div className="absolute top-24 left-6 w-72 h-20 bg-white/95 border-2 border-[#10B981]/80 rounded-2xl shadow-2xl flex items-center justify-between px-6 transform translate-z-[45px] hover:-translate-y-4 transition-all duration-300">
+                <div className="flex items-center gap-4">
+                  <span className="p-2.5 rounded-lg bg-[#10B981]/10 text-[#10B981] font-mono text-[10px] font-bold">L_02</span>
+                  <span className="font-mono text-xs font-bold text-gray-800">CREATIVE STUDIO</span>
+                </div>
+                <span className="w-3 h-3 rounded-full bg-[#10B981] pulsing-ring" />
               </div>
-              {/* Layer 3 */}
-              <div className="absolute top-32 left-8 w-52 h-14 bg-white/95 border-2 border-[#D946EF] rounded-xl shadow-xl flex items-center justify-between px-4 transform translate-z-[60px] hover:translate-y-[-10px] transition-all">
-                <span className="font-mono text-[9px] font-bold text-gray-800">L_03 // VENTURES</span>
-                <span className="w-2 h-2 rounded-full bg-[#D946EF] pulsing-ring" />
+              
+              {/* Stack Layer 3 */}
+              <div className="absolute top-48 left-12 w-72 h-20 bg-white/95 border-2 border-[#D946EF]/80 rounded-2xl shadow-2xl flex items-center justify-between px-6 transform translate-z-[90px] hover:-translate-y-4 transition-all duration-300">
+                <div className="flex items-center gap-4">
+                  <span className="p-2.5 rounded-lg bg-[#D946EF]/10 text-[#D946EF] font-mono text-[10px] font-bold">L_03</span>
+                  <span className="font-mono text-xs font-bold text-gray-800">VENTURE INCUBATOR</span>
+                </div>
+                <span className="w-3 h-3 rounded-full bg-[#D946EF] pulsing-ring" />
               </div>
             </figure>
           </aside>
@@ -811,20 +848,26 @@ export default function HomePageClient({
 
         {/* Scene 04: Events become memories */}
         <section className="narrative-layer min-h-screen grid grid-cols-1 md:grid-cols-2 gap-12 items-center px-6 md:px-24">
-          <aside className="flex justify-center items-center pointer-events-auto perspective-wrapper order-2 md:order-1">
-            <figure className="relative w-64 h-64 block-3d transform-gpu rotate-y-[15deg] rotate-x-[10deg]">
-              <div className="w-56 bg-white/95 border border-gray-200 rounded-2xl shadow-2xl p-6 transform translate-z-[30px]">
-                <div className="flex justify-between items-center mb-4">
-                  <span className="font-mono text-[9px] font-bold text-[#5956c8]">CHAPTER_CALENDAR</span>
-                  <span className="px-2 py-0.5 rounded-full bg-red-100 text-red-600 font-mono text-[8px] font-bold animate-pulse">LIVE NOW</span>
+          <aside className="w-full max-w-md md:max-w-lg h-[400px] flex justify-center items-center pointer-events-auto perspective-wrapper order-2 md:order-1">
+            <figure className="relative w-80 h-80 block-3d transform-gpu rotate-y-[18deg] rotate-x-[12deg] animate-float">
+              <div className="w-72 bg-white/95 border border-gray-200 rounded-3xl shadow-2xl p-6 transform translate-z-[40px] border-pulse">
+                <div className="flex justify-between items-center mb-6 border-b border-gray-100 pb-4">
+                  <span className="font-mono text-[10px] font-bold text-[#5956c8]">CHAPTER_CALENDAR</span>
+                  <span className="px-3 py-1 rounded-full bg-red-100 text-red-600 font-mono text-[9px] font-bold animate-pulse">LIVE INDEX</span>
                 </div>
-                <div className="space-y-3 font-mono text-[9px]">
-                  <div className="p-2.5 bg-gray-50 border border-gray-150 rounded-lg flex justify-between items-center">
-                    <span className="text-gray-800 font-bold">JUL_24 // HACKATHON</span>
+                <div className="space-y-4 font-mono text-[10px]">
+                  <div className="p-4 bg-gray-50 border border-gray-200 rounded-xl flex justify-between items-center hover:bg-gray-100 transition-colors">
+                    <div>
+                      <span className="block text-gray-800 font-bold">JUL_24 // HACKATHON</span>
+                      <span className="text-[8px] text-gray-400">MEMBERS LABS DEMO</span>
+                    </div>
                     <span className="text-[#10B981] font-bold">120 REG</span>
                   </div>
-                  <div className="p-2.5 bg-gray-50 border border-gray-150 rounded-lg flex justify-between items-center">
-                    <span className="text-gray-800 font-bold">AUG_10 // WORKSHOP</span>
+                  <div className="p-4 bg-gray-50 border border-gray-200 rounded-xl flex justify-between items-center hover:bg-gray-100 transition-colors">
+                    <div>
+                      <span className="block text-gray-800 font-bold">AUG_10 // WORKSHOP</span>
+                      <span className="text-[8px] text-gray-400">SOLIDITY CODING SCALES</span>
+                    </div>
                     <span className="text-[#5956c8] font-bold">ACTIVE</span>
                   </div>
                 </div>
@@ -862,22 +905,23 @@ export default function HomePageClient({
             </p>
           </article>
 
-          <aside className="flex justify-center items-center pointer-events-auto perspective-wrapper">
-            <figure className="relative w-64 h-64 block-3d transform-gpu rotate-x-[25deg]">
+          <aside className="w-full max-w-md md:max-w-lg h-[400px] flex justify-center items-center pointer-events-auto perspective-wrapper">
+            <figure className="relative w-80 h-80 block-3d transform-gpu rotate-x-[28deg] animate-float">
               <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-32 h-32 rounded-full border border-dashed border-[#5956c8]/30 animate-spin" style={{ animationDuration: "12s" }} />
+                <div className="w-48 h-48 rounded-full border-2 border-dashed border-[#5956c8]/30 animate-spin" style={{ animationDuration: "16s" }} />
+                <div className="absolute w-32 h-32 rounded-full border border-dashed border-[#10B981]/20 animate-spin" style={{ animationDuration: "8s", animationDirection: "reverse" }} />
               </div>
-              <div className="absolute top-4 left-4 w-28 bg-white/95 border border-gray-200 p-2.5 rounded-lg shadow-lg flex items-center gap-2 transform translate-z-[20px]">
-                <div className="w-5 h-5 rounded bg-gray-900 text-white font-mono text-[8px] flex items-center justify-center font-bold">V</div>
-                <span className="font-mono text-[8px] font-bold text-gray-700">VERCEL_NODE</span>
+              <div className="absolute top-2 left-2 w-32 bg-white/95 border border-gray-200 p-3.5 rounded-xl shadow-lg flex items-center gap-3 transform translate-z-[40px]">
+                <div className="w-6 h-6 rounded bg-gray-900 text-white font-mono text-[9px] flex items-center justify-center font-bold">V</div>
+                <span className="font-mono text-[9px] font-bold text-gray-700">VERCEL_NODE</span>
               </div>
-              <div className="absolute bottom-4 right-4 w-28 bg-white/95 border border-gray-200 p-2.5 rounded-lg shadow-lg flex items-center gap-2 transform translate-z-[40px]">
-                <div className="w-5 h-5 rounded bg-[#5956c8] text-white font-mono text-[8px] flex items-center justify-center font-bold">P</div>
-                <span className="font-mono text-[8px] font-bold text-gray-700">POLY_LABS</span>
+              <div className="absolute bottom-4 right-4 w-32 bg-white/95 border border-gray-200 p-3.5 rounded-xl shadow-lg flex items-center gap-3 transform translate-z-[60px]">
+                <div className="w-6 h-6 rounded bg-[#5956c8] text-white font-mono text-[9px] flex items-center justify-center font-bold">P</div>
+                <span className="font-mono text-[9px] font-bold text-gray-700">POLY_LABS</span>
               </div>
-              <div className="absolute top-28 right-0 w-28 bg-white/95 border border-gray-200 p-2.5 rounded-lg shadow-lg flex items-center gap-2 transform translate-z-[10px]">
-                <div className="w-5 h-5 rounded bg-[#10B981] text-white font-mono text-[8px] flex items-center justify-center font-bold">G</div>
-                <span className="font-mono text-[8px] font-bold text-gray-700">GATEWAY_VC</span>
+              <div className="absolute top-40 right-[-10px] w-32 bg-white/95 border border-gray-200 p-3.5 rounded-xl shadow-lg flex items-center gap-3 transform translate-z-[20px]">
+                <div className="w-6 h-6 rounded bg-[#10B981] text-white font-mono text-[9px] flex items-center justify-center font-bold">G</div>
+                <span className="font-mono text-[9px] font-bold text-gray-700">GATEWAY_VC</span>
               </div>
             </figure>
           </aside>
@@ -885,22 +929,24 @@ export default function HomePageClient({
 
         {/* Scene 06: Studio Projects */}
         <section className="narrative-layer min-h-screen grid grid-cols-1 md:grid-cols-2 gap-12 items-center px-6 md:px-24">
-          <aside className="flex justify-center items-center pointer-events-auto perspective-wrapper order-2 md:order-1">
-            <figure className="relative w-72 h-56 block-3d transform-gpu rotate-y-[-10deg] rotate-x-[15deg]">
-              <div className="w-full h-full bg-white/95 border-2 border-gray-800 rounded-xl shadow-2xl p-4 overflow-hidden flex flex-col justify-between">
-                <div className="flex items-center gap-1.5 border-b border-gray-100 pb-2 mb-2">
-                  <div className="w-2 h-2 rounded-full bg-red-400" />
-                  <div className="w-2 h-2 rounded-full bg-yellow-400" />
-                  <div className="w-2 h-2 rounded-full bg-green-400" />
-                  <span className="font-mono text-[7px] text-gray-400 ml-2">studio_editor.tsx</span>
+          <aside className="w-full max-w-md md:max-w-lg h-[400px] flex justify-center items-center pointer-events-auto perspective-wrapper order-2 md:order-1">
+            <figure className="relative w-full max-w-sm h-64 block-3d transform-gpu rotate-y-[-12deg] rotate-x-[16deg] animate-float">
+              <div className="w-full h-full bg-white/95 border-2 border-gray-800 rounded-2xl shadow-2xl p-6 overflow-hidden flex flex-col justify-between">
+                <div className="flex items-center justify-between border-b border-gray-100 pb-3 mb-2">
+                  <div className="flex items-center gap-2">
+                    <div className="w-2.5 h-2.5 rounded-full bg-red-400" />
+                    <div className="w-2.5 h-2.5 rounded-full bg-yellow-400" />
+                    <div className="w-2.5 h-2.5 rounded-full bg-green-400" />
+                  </div>
+                  <span className="font-mono text-[8px] text-gray-400">studio_editor.tsx</span>
                 </div>
-                <div className="flex-1 font-mono text-[8px] text-gray-500 space-y-1.5 pt-2">
+                <div className="flex-1 font-mono text-[10px] text-gray-500 space-y-2 pt-2 text-left">
                   <p className="text-[#5956c8]">const LayerzStudio = async () =&gt; &#123;</p>
                   <p className="pl-4">await compileFrontend(&quot;modular_core&quot;);</p>
                   <p className="pl-4 text-[#10B981]">return new StudioDeployment(&#123; success: true &#125;);</p>
                   <p className="text-[#5956c8]">&#125;;</p>
                 </div>
-                <div className="h-6 bg-gray-50 border border-gray-150 rounded flex items-center justify-between px-2 font-mono text-[8px]">
+                <div className="h-10 bg-gray-50 border border-gray-200 rounded-xl flex items-center justify-between px-4 font-mono text-[9px] mt-4">
                   <span className="text-[#10B981] font-bold">DEPLOY: READY</span>
                   <span className="text-gray-400 font-bold">2.4ms</span>
                 </div>
@@ -941,12 +987,12 @@ export default function HomePageClient({
             </Link>
           </article>
 
-          <aside className="flex justify-center items-center pointer-events-auto perspective-wrapper">
-            <figure className="relative w-64 h-64 block-3d transform-gpu flex items-center justify-center">
-              <div className="absolute w-44 h-44 rounded-full border-2 border-dashed border-[#5956c8]/40 animate-spin" style={{ animationDuration: "16s" }} />
-              <div className="absolute w-32 h-32 rounded-full border-2 border-dashed border-[#10B981]/50 animate-spin" style={{ animationDuration: "8s", animationDirection: "reverse" }} />
-              <div className="absolute w-20 h-20 rounded-full border-2 border-[#D946EF]/30 flex items-center justify-center bg-white shadow-xl">
-                <span className="font-mono text-[9px] font-bold text-gray-900">VAULT</span>
+          <aside className="w-full max-w-md md:max-w-lg h-[400px] flex justify-center items-center pointer-events-auto perspective-wrapper">
+            <figure className="relative w-80 h-80 block-3d transform-gpu flex items-center justify-center animate-float">
+              <div className="absolute w-56 h-56 rounded-full border-2 border-dashed border-[#5956c8]/40 animate-spin" style={{ animationDuration: "20s" }} />
+              <div className="absolute w-40 h-40 rounded-full border-2 border-dashed border-[#10B981]/50 animate-spin" style={{ animationDuration: "10s", animationDirection: "reverse" }} />
+              <div className="absolute w-24 h-24 rounded-full border-2 border-[#D946EF]/30 flex items-center justify-center bg-white shadow-2xl">
+                <span className="font-mono text-[10px] font-bold text-gray-900">VAULT_CORE</span>
               </div>
             </figure>
           </aside>
