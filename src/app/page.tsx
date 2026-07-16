@@ -39,6 +39,8 @@ interface Project {
   category: string;
   client: string;
   description: string;
+  challenge: string;
+  solution: string;
   outcome: string;
   technologies: string[];
   featured: boolean;
