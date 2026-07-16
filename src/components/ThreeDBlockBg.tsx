@@ -5,9 +5,14 @@ import React, { useEffect, useRef } from "react";
 interface ThreeDBlockBgProps {
   colorType?: "default" | "lavender" | "green";
   opacity?: number;
+  mode?: "blocks" | "particles" | "grid";
 }
 
-export default function ThreeDBlockBg({ colorType = "default", opacity = 0.85 }: ThreeDBlockBgProps) {
+export default function ThreeDBlockBg({ 
+  colorType = "default", 
+  opacity = 0.85, 
+  mode = "blocks" 
+}: ThreeDBlockBgProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const mouseRef = useRef({ x: -1000, y: -1000, active: false });
 
@@ -46,12 +51,20 @@ export default function ThreeDBlockBg({ colorType = "default", opacity = 0.85 }:
     window.addEventListener("mousemove", handleMouseMove);
     document.addEventListener("mouseleave", handleMouseLeave);
 
-    // Grid configuration
-    const size = 35; // Size of isometric half-width
-    const hSpacing = size * 2;
-    const vSpacing = size * 1.15; // overlap factor for isometric stack
+    // Color definitions
+    let baseRGB = { r: 235, g: 235, b: 250 };
+    if (colorType === "lavender") {
+      baseRGB = { r: 139, g: 136, b: 248 }; // #8B88F8
+    } else if (colorType === "green") {
+      baseRGB = { r: 137, g: 243, b: 54 }; // #89F336
+    }
 
     let time = 0;
+
+    // --- MODE 1: ISOMETRIC BLOCKS ---
+    const size = 35;
+    const hSpacing = size * 2;
+    const vSpacing = size * 1.15;
 
     const drawIsoBlock = (
       ctx: CanvasRenderingContext2D,
@@ -59,14 +72,13 @@ export default function ThreeDBlockBg({ colorType = "default", opacity = 0.85 }:
       cy: number,
       w: number,
       h: number,
-      baseColor: { r: number; g: number; b: number }
+      color: { r: number; g: number; b: number }
     ) => {
-      const scale = 0.5; // height offset factor
+      const scale = 0.5;
       const topRhombusY = cy - h;
 
-      // Colors based on faces for 3D depth shading
-      // Top face (Brightest)
-      ctx.fillStyle = `rgba(${baseColor.r + 15}, ${baseColor.g + 15}, ${baseColor.b + 15}, 0.85)`;
+      // Top Face
+      ctx.fillStyle = `rgba(${color.r + 15}, ${color.g + 15}, ${color.b + 15}, 0.85)`;
       ctx.beginPath();
       ctx.moveTo(cx, topRhombusY);
       ctx.lineTo(cx + w, topRhombusY - w * scale);
@@ -75,8 +87,8 @@ export default function ThreeDBlockBg({ colorType = "default", opacity = 0.85 }:
       ctx.closePath();
       ctx.fill();
 
-      // Left face (Darker)
-      ctx.fillStyle = `rgba(${baseColor.r - 20}, ${baseColor.g - 20}, ${baseColor.b - 20}, 0.9)`;
+      // Left Face
+      ctx.fillStyle = `rgba(${color.r - 20}, ${color.g - 20}, ${color.b - 20}, 0.9)`;
       ctx.beginPath();
       ctx.moveTo(cx - w, topRhombusY - w * scale);
       ctx.lineTo(cx, topRhombusY);
@@ -85,8 +97,8 @@ export default function ThreeDBlockBg({ colorType = "default", opacity = 0.85 }:
       ctx.closePath();
       ctx.fill();
 
-      // Right face (Medium dark)
-      ctx.fillStyle = `rgba(${baseColor.r - 5}, ${baseColor.g - 5}, ${baseColor.b - 5}, 0.9)`;
+      // Right Face
+      ctx.fillStyle = `rgba(${color.r - 5}, ${color.g - 5}, ${color.b - 5}, 0.9)`;
       ctx.beginPath();
       ctx.moveTo(cx, topRhombusY);
       ctx.lineTo(cx + w, topRhombusY - w * scale);
@@ -95,8 +107,8 @@ export default function ThreeDBlockBg({ colorType = "default", opacity = 0.85 }:
       ctx.closePath();
       ctx.fill();
 
-      // Highlight wireframe outlines to look super crisp and detailed
-      ctx.strokeStyle = `rgba(${baseColor.r + 40}, ${baseColor.g + 40}, ${baseColor.b + 40}, 0.25)`;
+      // Outlines
+      ctx.strokeStyle = `rgba(${color.r + 40}, ${color.g + 40}, ${color.b + 40}, 0.25)`;
       ctx.lineWidth = 0.8;
       ctx.beginPath();
       ctx.moveTo(cx, topRhombusY);
@@ -111,62 +123,157 @@ export default function ThreeDBlockBg({ colorType = "default", opacity = 0.85 }:
       ctx.lineTo(cx, topRhombusY);
       ctx.lineTo(cx, cy);
       ctx.stroke();
-
-      ctx.beginPath();
-      ctx.moveTo(cx, topRhombusY);
-      ctx.lineTo(cx + w, topRhombusY - w * scale);
-      ctx.stroke();
     };
+
+    // --- MODE 2: NEURAL CONNECTIONS PARTICLES ---
+    interface Particle {
+      x: number;
+      y: number;
+      vx: number;
+      vy: number;
+      size: number;
+    }
+    const particleCount = 45;
+    const particles: Particle[] = [];
+    for (let i = 0; i < particleCount; i++) {
+      particles.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        vx: (Math.random() - 0.5) * 0.6,
+        vy: (Math.random() - 0.5) * 0.6,
+        size: Math.random() * 2.5 + 1
+      });
+    }
+
+    // --- MODE 3: PERSPECTIVE CYBER GRID ---
+    let gridOffset = 0;
 
     const render = () => {
       ctx.clearRect(0, 0, width, height);
-      time += 0.015;
+      time += 0.012;
 
-      // Base colors from theme
-      let baseRGB = { r: 235, g: 235, b: 250 }; // default soft greyish blue
-      if (colorType === "lavender") {
-        baseRGB = { r: 139, g: 136, b: 248 }; // Lavender #8B88F8
-      } else if (colorType === "green") {
-        baseRGB = { r: 137, g: 243, b: 54 }; // Lime Green #89F336
-      }
+      if (mode === "blocks") {
+        const cols = Math.ceil(width / hSpacing) + 2;
+        const rows = Math.ceil(height / vSpacing) + 4;
 
-      // We render isometric layers of blocks
-      const cols = Math.ceil(width / hSpacing) + 2;
-      const rows = Math.ceil(height / vSpacing) + 4;
+        for (let r = -2; r < rows; r++) {
+          for (let c = -2; c < cols; c++) {
+            let cx = c * hSpacing;
+            if (r % 2 === 1) cx += size;
+            const cy = r * vSpacing;
 
-      for (let r = -2; r < rows; r++) {
-        for (let c = -2; c < cols; c++) {
-          // Iso staggered coords
-          let cx = c * hSpacing;
-          if (r % 2 === 1) {
-            cx += size;
+            const dx = cx - mouseRef.current.x;
+            const dy = (cy - size * 0.5) - mouseRef.current.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+
+            const wave = Math.sin(c * 0.2 + r * 0.15 + time) * 10 + Math.cos(c * 0.1 - r * 0.2 + time * 0.7) * 7;
+            
+            let hoverInfluence = 0;
+            if (mouseRef.current.active && dist < 220) {
+              hoverInfluence = (1 - dist / 220) * 32;
+            }
+
+            const blockHeight = 12 + Math.max(-5, wave + hoverInfluence);
+            const heightShiftRGB = {
+              r: Math.max(20, Math.min(255, baseRGB.r - (blockHeight * 0.4))),
+              g: Math.max(20, Math.min(255, baseRGB.g - (blockHeight * 0.15))),
+              b: Math.max(20, Math.min(255, baseRGB.b + (blockHeight * 0.6)))
+            };
+
+            drawIsoBlock(ctx, cx, cy, size - 2, blockHeight, heightShiftRGB);
           }
-          const cy = r * vSpacing;
+        }
+      } 
+      
+      else if (mode === "particles") {
+        // Draw connecting lines and update coordinates
+        ctx.strokeStyle = `rgba(${baseRGB.r}, ${baseRGB.g}, ${baseRGB.b}, 0.08)`;
+        ctx.lineWidth = 1.0;
 
-          // Calculate interactive height
-          const dx = cx - mouseRef.current.x;
-          const dy = (cy - size * 0.5) - mouseRef.current.y;
-          const dist = Math.sqrt(dx * dx + dy * dy);
+        for (let i = 0; i < particles.length; i++) {
+          const p1 = particles[i];
+          p1.x += p1.vx;
+          p1.y += p1.vy;
 
-          // Wave effect based on grid position and time
-          const wave = Math.sin(c * 0.2 + r * 0.15 + time) * 12 + Math.cos(c * 0.1 - r * 0.2 + time * 0.7) * 8;
+          if (p1.x < 0 || p1.x > width) p1.vx *= -1;
+          if (p1.y < 0 || p1.y > height) p1.vy *= -1;
+
+          // Draw node dot
+          ctx.fillStyle = `rgba(${baseRGB.r}, ${baseRGB.g}, ${baseRGB.b}, 0.45)`;
+          ctx.beginPath();
+          ctx.arc(p1.x, p1.y, p1.size, 0, Math.PI * 2);
+          ctx.fill();
+
+          // Mouse attraction
+          if (mouseRef.current.active) {
+            const dx = mouseRef.current.x - p1.x;
+            const dy = mouseRef.current.y - p1.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+            if (dist < 150) {
+              ctx.strokeStyle = `rgba(${baseRGB.r}, ${baseRGB.g}, ${baseRGB.b}, ${(1 - dist / 150) * 0.25})`;
+              ctx.beginPath();
+              ctx.moveTo(p1.x, p1.y);
+              ctx.lineTo(mouseRef.current.x, mouseRef.current.y);
+              ctx.stroke();
+            }
+          }
+
+          // Inter-node connections
+          for (let j = i + 1; j < particles.length; j++) {
+            const p2 = particles[j];
+            const dx = p1.x - p2.x;
+            const dy = p1.y - p2.y;
+            const dist = Math.sqrt(dx * dx + dy * dy);
+
+            if (dist < 120) {
+              ctx.strokeStyle = `rgba(${baseRGB.r}, ${baseRGB.g}, ${baseRGB.b}, ${(1 - dist / 120) * 0.12})`;
+              ctx.beginPath();
+              ctx.moveTo(p1.x, p1.y);
+              ctx.lineTo(p2.x, p2.y);
+              ctx.stroke();
+            }
+          }
+        }
+      } 
+      
+      else if (mode === "grid") {
+        // Draw 3D scrolling perspective cyber grid
+        gridOffset += 0.8;
+        if (gridOffset >= 60) gridOffset = 0;
+
+        ctx.strokeStyle = `rgba(${baseRGB.r}, ${baseRGB.g}, ${baseRGB.b}, 0.08)`;
+        ctx.lineWidth = 1.2;
+
+        const horizon = height * 0.1; // perspective vanishing line
+        const gridCount = 26;
+
+        // Draw perspective lines meeting at vanishing point
+        for (let i = -10; i <= gridCount + 10; i++) {
+          const xStart = (i / gridCount) * width;
+          ctx.beginPath();
+          ctx.moveTo(width / 2, horizon);
+          ctx.lineTo(xStart, height);
+          ctx.stroke();
+        }
+
+        // Draw horizontal lines scrolling forward
+        for (let y = gridOffset; y < height; y += 60) {
+          const ratio = (y / height);
+          const drawY = horizon + ratio * (height - horizon);
           
-          // Hover height influence
-          let hoverInfluence = 0;
-          if (mouseRef.current.active && dist < 220) {
-            hoverInfluence = (1 - dist / 220) * 35;
-          }
+          ctx.strokeStyle = `rgba(${baseRGB.r}, ${baseRGB.g}, ${baseRGB.b}, ${ratio * 0.15})`;
+          ctx.beginPath();
+          ctx.moveTo(0, drawY);
+          ctx.lineTo(width, drawY);
+          ctx.stroke();
+        }
 
-          const blockHeight = 12 + Math.max(-5, wave + hoverInfluence);
-
-          // Dynamic colors based on height
-          const heightShiftRGB = {
-            r: Math.max(20, Math.min(255, baseRGB.r - (blockHeight * 0.5))),
-            g: Math.max(20, Math.min(255, baseRGB.g - (blockHeight * 0.2))),
-            b: Math.max(20, Math.min(255, baseRGB.b + (blockHeight * 0.8)))
-          };
-
-          drawIsoBlock(ctx, cx, cy, size - 2, blockHeight, heightShiftRGB);
+        // Mouse hover ripple
+        if (mouseRef.current.active) {
+          ctx.strokeStyle = `rgba(${baseRGB.r}, ${baseRGB.g}, ${baseRGB.b}, 0.05)`;
+          ctx.beginPath();
+          ctx.arc(mouseRef.current.x, mouseRef.current.y, 80, 0, Math.PI * 2);
+          ctx.stroke();
         }
       }
 
@@ -181,7 +288,7 @@ export default function ThreeDBlockBg({ colorType = "default", opacity = 0.85 }:
       window.removeEventListener("mousemove", handleMouseMove);
       document.removeEventListener("mouseleave", handleMouseLeave);
     };
-  }, [colorType]);
+  }, [colorType, mode]);
 
   return (
     <canvas

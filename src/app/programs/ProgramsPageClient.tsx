@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import ThreeDBlockBg from "@/components/ThreeDBlockBg";
 
@@ -19,6 +19,7 @@ interface ProgramsPageClientProps {
 }
 
 export default function ProgramsPageClient({ initialPrograms }: ProgramsPageClientProps) {
+  const [programs, setPrograms] = useState<Program[]>(initialPrograms);
   const [selectedProgram, setSelectedProgram] = useState<Program | null>(null);
   const [formSubmitted, setFormSubmitted] = useState(false);
   const [formData, setFormData] = useState({
@@ -28,6 +29,23 @@ export default function ProgramsPageClient({ initialPrograms }: ProgramsPageClie
     interest: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Sync real-time programs content from admin endpoints
+  useEffect(() => {
+    async function syncPrograms() {
+      try {
+        const res = await fetch("/api/admin/data?file=programs.json");
+        if (res.ok) {
+          setPrograms(await res.json());
+        }
+      } catch (err) {
+        console.error("Programs real-time sync failed:", err);
+      }
+    }
+    syncPrograms();
+    const interval = setInterval(syncPrograms, 6000);
+    return () => clearInterval(interval);
+  }, []);
 
   // Custom Tilt Handler for 3D card movement
   const handleTiltMove = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -65,10 +83,11 @@ export default function ProgramsPageClient({ initialPrograms }: ProgramsPageClie
   return (
     <div className="relative min-h-screen bg-white text-[#111111] pb-24 overflow-hidden font-sans">
       
-      {/* Background decoration */}
+      {/* Background decoration with distinct cyber grid background mode */}
       <div className="absolute inset-0 h-[450px] w-full border-b border-[#eaeaea] bg-gradient-to-b from-white to-[#f5f5ff] overflow-hidden">
         <div className="absolute inset-0 bg-[url('/bg-3d.jpg')] bg-cover bg-center opacity-[0.06] mix-blend-overlay"></div>
-        <ThreeDBlockBg colorType="lavender" opacity={0.5} />
+        {/* Render distinct grid overlay for programs page */}
+        <ThreeDBlockBg colorType="lavender" opacity={0.5} mode="grid" />
         <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent"></div>
       </div>
 
@@ -89,7 +108,7 @@ export default function ProgramsPageClient({ initialPrograms }: ProgramsPageClie
 
         {/* Programs Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-5xl mx-auto">
-          {initialPrograms.map((prog) => {
+          {programs.map((prog) => {
             const isOpen = prog.status.includes("Open") || prog.status.includes("Applications");
             return (
               <div key={prog.id} className="tilt-card-container">

@@ -1,8 +1,8 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import ThreeDBlockBg from "@/components/ThreeDBlockBg";
+import ProceduralBg from "@/components/ProceduralBg";
 
 interface Project {
   id: string;
@@ -21,6 +21,7 @@ interface StudioPageClientProps {
 }
 
 export default function StudioPageClient({ initialProjects }: StudioPageClientProps) {
+  const [projects, setProjects] = useState<Project[]>(initialProjects);
   const [quizStep, setQuizStep] = useState(0);
   const [answers, setAnswers] = useState({
     category: "",
@@ -29,14 +30,30 @@ export default function StudioPageClient({ initialProjects }: StudioPageClientPr
   });
   const [proposal, setProposal] = useState<string | null>(null);
 
-  // Helper for 3D card tilt
+  // Sync real-time studio content from admin endpoints
+  useEffect(() => {
+    async function syncStudio() {
+      try {
+        const res = await fetch("/api/admin/data?file=studio.json");
+        if (res.ok) {
+          setProjects(await res.json());
+        }
+      } catch (err) {
+        console.error("Studio sync failed:", err);
+      }
+    }
+    syncStudio();
+    const interval = setInterval(syncStudio, 6000);
+    return () => clearInterval(interval);
+  }, []);
+
   const handleTiltMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const card = e.currentTarget;
     const rect = card.getBoundingClientRect();
     const x = e.clientX - rect.left;
     const y = e.clientY - rect.top;
-    const rx = ((y - rect.height / 2) / (rect.height / 2)) * -8; // Rotate up/down
-    const ry = ((x - rect.width / 2) / (rect.width / 2)) * 8; // Rotate left/right
+    const rx = ((y - rect.height / 2) / (rect.height / 2)) * -8;
+    const ry = ((x - rect.width / 2) / (rect.width / 2)) * 8;
     card.style.setProperty("--rx", `${rx}deg`);
     card.style.setProperty("--ry", `${ry}deg`);
   };
@@ -81,10 +98,9 @@ export default function StudioPageClient({ initialProjects }: StudioPageClientPr
   return (
     <div className="relative min-h-screen bg-white text-[#111111] pb-24 overflow-hidden font-sans">
       
-      {/* Background decoration */}
-      <div className="absolute inset-0 h-[450px] w-full border-b border-[#eaeaea] bg-gradient-to-b from-white to-[#f5f5ff] overflow-hidden">
-        <div className="absolute inset-0 bg-[url('/bg-3d.jpg')] bg-cover bg-center opacity-[0.06] mix-blend-overlay"></div>
-        <ThreeDBlockBg colorType="lavender" opacity={0.4} />
+      {/* Background blueprint layout */}
+      <div className="absolute inset-0 h-[450px] w-full border-b border-gray-100 bg-gradient-to-b from-white to-[#fcfcff] overflow-hidden">
+        <ProceduralBg mode="blueprint" colorType="lavender" opacity={0.4} />
         <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent"></div>
       </div>
 
@@ -92,7 +108,7 @@ export default function StudioPageClient({ initialProjects }: StudioPageClientPr
         
         {/* Header Title */}
         <div className="text-center mb-16 max-w-3xl mx-auto">
-          <span className="text-[10px] font-mono font-black uppercase tracking-widest text-[#8B88F8] bg-[#f0f0ff] border border-[#dad9fc] px-4 py-1.5 rounded-full inline-block">
+          <span className="text-[10px] font-mono font-bold text-[#8B88F8] bg-[#f0f0ff] border border-[#dad9fc] px-4 py-1.5 rounded-full inline-block">
             PRODUCTION PORTFOLIO
           </span>
           <h1 className="text-4xl md:text-6xl font-black tracking-tight text-[#111111] mt-6 mb-4">
@@ -103,9 +119,9 @@ export default function StudioPageClient({ initialProjects }: StudioPageClientPr
           </p>
         </div>
 
-        {/* Case Studies - 3D story telling style */}
+        {/* Case Studies */}
         <div className="space-y-16 mb-24 max-w-5xl mx-auto">
-          {initialProjects.map((project, index) => {
+          {projects.map((project, index) => {
             const isEven = index % 2 === 0;
             return (
               <div key={project.id} className="tilt-card-container">
@@ -113,12 +129,12 @@ export default function StudioPageClient({ initialProjects }: StudioPageClientPr
                   id={project.id}
                   onMouseMove={handleTiltMove}
                   onMouseLeave={handleTiltLeave}
-                  className="tilt-card bg-[#111111] border border-[#222222] rounded-2xl overflow-hidden grid grid-cols-1 lg:grid-cols-12 gap-0 text-white shadow-xl dark-theme cursor-pointer"
+                  className="tilt-card bg-[#111111] border border-[#222222] rounded-2xl overflow-hidden grid grid-cols-1 lg:grid-cols-12 gap-0 text-white shadow-xl dark-theme cursor-pointer animate-fade-up"
                 >
                   {/* Text Content */}
                   <div className={`tilt-card-inner p-8 md:p-12 lg:col-span-7 flex flex-col justify-between ${isEven ? "lg:order-1" : "lg:order-2"}`}>
                     <div>
-                      <div className="flex items-center justify-between mb-6">
+                      <div className="flex justify-between items-center mb-6">
                         <span className="px-3 py-1 rounded-full text-[10px] font-mono font-bold bg-[#8B88F8]/10 border border-[#8B88F8]/20 text-[#8B88F8] uppercase tracking-wider">
                           {project.category}
                         </span>
@@ -164,9 +180,8 @@ export default function StudioPageClient({ initialProjects }: StudioPageClientPr
                     }`}
                   >
                     <div className="absolute inset-0 bg-gradient-to-br from-[#8B88F8]/5 to-transparent pointer-events-none"></div>
-                    <div className="absolute top-0 right-0 w-32 h-32 bg-[#89F336]/5 rounded-full blur-[40px] pointer-events-none"></div>
                     
-                    {/* SVG Isometric Cube Graphics */}
+                    {/* SVG Graphic */}
                     <svg width="48" height="48" viewBox="0 0 34 34" fill="none" className="mb-6 animate-float">
                       <path d="M17 26.5L6 21L17 15.5L28 21L17 26.5Z" fill="#89F336" opacity="0.8" />
                       <path d="M6 21V23L17 28.5V26.5L6 21Z" fill="#73D41E" />
@@ -183,7 +198,6 @@ export default function StudioPageClient({ initialProjects }: StudioPageClientPr
                       {project.outcome}
                     </p>
                     
-                    {/* Code simulation details */}
                     <div className="w-full bg-[#111111]/80 rounded-lg p-3 border border-[#222222] text-left font-mono text-[8px] text-gray-400 mt-2 space-y-1">
                       <p className="text-green-500 font-bold">[BUILD_VERIFICATION: OK]</p>
                       <p>❯ compilation target matches spec</p>
@@ -197,7 +211,7 @@ export default function StudioPageClient({ initialProjects }: StudioPageClientPr
           })}
         </div>
 
-        {/* Studio Consultation Intake Section */}
+        {/* Consultation Intake Section */}
         <section className="max-w-4xl mx-auto rounded-2xl border border-[#222222] bg-[#111111] p-8 md:p-12 relative overflow-hidden text-white shadow-xl dark-theme">
           <div className="absolute left-0 bottom-0 w-64 h-64 bg-[#8B88F8]/5 rounded-full blur-[80px] pointer-events-none"></div>
           
@@ -218,7 +232,6 @@ export default function StudioPageClient({ initialProjects }: StudioPageClientPr
               </button>
             )}
 
-            {/* Quiz Step 1: Category */}
             {quizStep === 1 && (
               <div className="space-y-6">
                 <p className="text-xs font-mono font-bold uppercase tracking-wider text-[#8B88F8]">
@@ -238,7 +251,6 @@ export default function StudioPageClient({ initialProjects }: StudioPageClientPr
               </div>
             )}
 
-            {/* Quiz Step 2: Bottleneck */}
             {quizStep === 2 && (
               <div className="space-y-6">
                 <p className="text-xs font-mono font-bold uppercase tracking-wider text-[#8B88F8]">
@@ -258,7 +270,6 @@ export default function StudioPageClient({ initialProjects }: StudioPageClientPr
               </div>
             )}
 
-            {/* Quiz Step 3: Timeline */}
             {quizStep === 3 && (
               <div className="space-y-6">
                 <p className="text-xs font-mono font-bold uppercase tracking-wider text-[#8B88F8]">
@@ -278,7 +289,6 @@ export default function StudioPageClient({ initialProjects }: StudioPageClientPr
               </div>
             )}
 
-            {/* Proposal Result */}
             {quizStep === 4 && proposal && (
               <div className="space-y-6 max-w-xl mx-auto animate-scale-up">
                 <div className="p-6 bg-[#222222]/80 rounded-xl border border-[#333333] text-left relative overflow-hidden font-mono text-xs">

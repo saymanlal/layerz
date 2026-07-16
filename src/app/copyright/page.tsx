@@ -1,6 +1,6 @@
 import { Metadata } from "next";
 import Link from "next/link";
-import ThreeDBlockBg from "@/components/ThreeDBlockBg";
+import ProceduralBg from "@/components/ProceduralBg";
 
 export const dynamic = "force-static";
 
@@ -44,9 +44,9 @@ export default function CopyrightPage() {
   return (
     <div className="relative min-h-screen bg-white text-[#111111] pb-24 overflow-hidden font-sans">
       
-      {/* Background decoration */}
+      {/* Background decoration with minimal editorial grid */}
       <div className="absolute inset-0 h-[400px] w-full border-b border-[#eaeaea] bg-gradient-to-b from-white to-[#f5f5ff] overflow-hidden">
-        <ThreeDBlockBg colorType="lavender" opacity={0.4} />
+        <ProceduralBg mode="minimal" colorType="lavender" opacity={0.4} />
         <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent"></div>
       </div>
 

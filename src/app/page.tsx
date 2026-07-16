@@ -49,6 +49,9 @@ interface Member {
   name: string;
   role: string;
   checkedIn: boolean;
+  github: string;
+  twitter: string;
+  skills: string[];
 }
 
 interface Partner {
@@ -56,6 +59,7 @@ interface Partner {
   name: string;
   website: string;
   type: string;
+  tier: string;
   featured: boolean;
 }
 
