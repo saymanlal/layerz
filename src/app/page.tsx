@@ -102,8 +102,10 @@ export default async function Home() {
       {/* Hero Section */}
       <section className="relative pt-36 pb-20 px-4 text-center hero-gradient border-b border-[#eaeaea]">
         <div className="absolute inset-0 h-full w-full overflow-hidden">
-          <ThreeDBlockBg colorType="default" opacity={0.6} />
-          <div className="absolute inset-0 bg-gradient-to-t from-white via-white/50 to-transparent"></div>
+          {/* Static 3D block background texture */}
+          <div className="absolute inset-0 bg-[url('/bg-3d.jpg')] bg-cover bg-center opacity-10 mix-blend-overlay"></div>
+          <ThreeDBlockBg colorType="default" opacity={0.5} />
+          <div className="absolute inset-0 bg-gradient-to-t from-white via-white/40 to-transparent"></div>
         </div>
 
         <div className="max-w-4xl mx-auto relative z-10">

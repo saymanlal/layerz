@@ -1,24 +1,33 @@
 import { NextResponse } from "next/server";
+import { cookies } from "next/headers";
 import fs from "fs";
 import path from "path";
 
 export async function POST(request: Request) {
   try {
+    // Security check: Verify session cookie
+    const cookieStore = await cookies();
+    const session = cookieStore.get("layerz_session");
+    if (!session || session.value !== "authenticated") {
+      return NextResponse.json({ error: "Unauthorized access. Please log in." }, { status: 401 });
+    }
+
     const body = await request.json();
     const { filePath, content, commitMessage, pat, repo } = body;
+
 
     if (!filePath || !content) {
       return NextResponse.json({ error: "Missing filePath or content" }, { status: 400 });
     }
 
-    const cleanFilePath = filePath.replace(/^\//, ""); // remove leading slash
-    const msg = commitMessage || `admin: update ${cleanFilePath}`;
+    const cleanFileName = path.basename(filePath);
+    const msg = commitMessage || `admin: update ${cleanFileName}`;
 
-    // 1. If in development, write to local file system
+    // 1. If in development, write to local file system in the website project
     let localWriteSuccess = false;
     if (process.env.NODE_ENV === "development") {
       try {
-        const fullLocalPath = path.join(process.cwd(), cleanFilePath);
+        const fullLocalPath = path.join(process.cwd(), "src", "data", cleanFileName);
         // Ensure directory exists
         const dir = path.dirname(fullLocalPath);
         if (!fs.existsSync(dir)) {
@@ -31,18 +40,37 @@ export async function POST(request: Request) {
       }
     }
 
-    // 2. If GitHub credentials are provided (either in request or in env), commit to GitHub
+    // 2. Commit to GitHub (private data repository)
     const githubPat = pat || process.env.GITHUB_PAT;
-    const githubRepo = repo || process.env.GITHUB_REPO; // e.g. "krushn/layerz-data" or "krushn/layerz"
+    const githubRepo = repo || process.env.GITHUB_REPO || "saymanlal/layerz-data";
+    const branch = process.env.GITHUB_BRANCH || "main";
 
     let githubSuccess = false;
     let githubErrorMsg = "";
 
     if (githubPat && githubRepo) {
       try {
-        const url = `https://api.github.com/repos/${githubRepo}/contents/${cleanFilePath}`;
+        // Resolve whether file is in root or src/data/ on the Github repo
+        let resolvedPath = cleanFileName; // Default to root
         
-        // Step A: Get current file SHA if it exists
+        // Check if file exists in src/data/ on Github first
+        const checkUrl = `https://api.github.com/repos/${githubRepo}/contents/src/data/${cleanFileName}?ref=${branch}`;
+        const checkRes = await fetch(checkUrl, {
+          method: "GET",
+          headers: {
+            "Authorization": `token ${githubPat}`,
+            "Accept": "application/vnd.github.v3+json",
+            "User-Agent": "Layerz-CMS"
+          }
+        });
+
+        if (checkRes.status === 200) {
+          resolvedPath = `src/data/${cleanFileName}`;
+        }
+
+        const url = `https://api.github.com/repos/${githubRepo}/contents/${resolvedPath}`;
+        
+        // Step A: Get current file SHA to perform the update
         const getRes = await fetch(url, {
           method: "GET",
           headers: {
@@ -72,7 +100,8 @@ export async function POST(request: Request) {
           body: JSON.stringify({
             message: msg,
             content: base64Content,
-            sha: sha // required to update an existing file
+            sha: sha,
+            branch
           })
         });
 
@@ -105,7 +134,6 @@ export async function POST(request: Request) {
       });
     }
 
-    // If GitHub was attempted but failed, or no GitHub configured in production
     if (githubPat && githubRepo) {
       return NextResponse.json({
         success: false,
@@ -115,7 +143,7 @@ export async function POST(request: Request) {
 
     return NextResponse.json({
       success: false,
-      error: "No GitHub credentials provided. Please configure GITHUB_PAT and GITHUB_REPO or provide a PAT in the admin panel."
+      error: "No GitHub credentials configured. Please set GITHUB_PAT and GITHUB_REPO."
     }, { status: 400 });
 
   } catch (error: any) {

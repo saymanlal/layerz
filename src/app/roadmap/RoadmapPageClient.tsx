@@ -18,9 +18,8 @@ interface RoadmapPageClientProps {
 
 export default function RoadmapPageClient({ initialRoadmap }: RoadmapPageClientProps) {
   const [selectedQuarterId, setSelectedQuarterId] = useState<string>("rm-2");
-  
-  // Interactive user-toggled milestones checklist
   const [completedMilestones, setCompletedMilestones] = useState<Record<string, boolean>>({});
+  const [tilt, setTilt] = useState({ x: 12, y: -15 });
 
   useEffect(() => {
     const initialCompleted: Record<string, boolean> = {};
@@ -42,7 +41,28 @@ export default function RoadmapPageClient({ initialRoadmap }: RoadmapPageClientP
     }));
   };
 
+  // Track cursor position to tilt the 3D stack dynamically
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      const xNorm = (e.clientX / window.innerWidth - 0.5) * 2; // -1 to 1
+      const yNorm = (e.clientY / window.innerHeight - 0.5) * 2; // -1 to 1
+      setTilt({
+        x: 15 - yNorm * 10, // Rotate X based on Y mouse pos
+        y: -20 + xNorm * 15 // Rotate Y based on X mouse pos
+      });
+    };
+    window.addEventListener("mousemove", handleMouseMove);
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, []);
+
   const selectedQuarter = initialRoadmap.find((q) => q.id === selectedQuarterId);
+
+  // Helper to calculate height of each 3D block
+  const getQuarterCompletion = (q: Quarter) => {
+    const total = q.milestones.length;
+    const completed = q.milestones.filter(m => completedMilestones[`${q.id}-${m}`]).length;
+    return total > 0 ? (completed / total) : 0;
+  };
 
   return (
     <div className="relative min-h-screen bg-white text-[#111111] pb-24 overflow-hidden font-sans">
@@ -56,116 +76,144 @@ export default function RoadmapPageClient({ initialRoadmap }: RoadmapPageClientP
         {/* Header Title */}
         <div className="text-center mb-16 max-w-3xl mx-auto">
           <span className="text-[11px] font-bold uppercase tracking-widest text-[#8B88F8] bg-[#f0f0ff] border border-[#dad9fc] px-4 py-1.5 rounded-full inline-block">
-            Ecosystem Timeline
+            Interactive Roadmap
           </span>
           <h1 className="text-4xl md:text-6xl font-extrabold tracking-tight text-[#111111] mt-6 mb-4">
             Ecosystem Roadmap
           </h1>
           <p className="text-lg text-[#5C5C5C] leading-relaxed">
-            A chronological progression detailing our chapters rollout, open-source SDK releases, Smart Contract Audits, and micro-grants funding.
+            Verify milestone completions. Watch the 3D layered stack grow as tasks are completed.
           </p>
         </div>
 
-        {/* Timeline Columns */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-12 max-w-5xl mx-auto">
-          {/* Vertical picker (Left Column) */}
-          <div className="lg:col-span-1 space-y-4 relative">
-            <div className="absolute left-7 top-6 bottom-6 w-0.5 bg-gray-200 pointer-events-none"></div>
-            
-            {initialRoadmap.map((q) => {
-              const isActive = q.id === selectedQuarterId;
-              const isCompleted = q.status === "completed";
-              const isCurrent = q.status === "current";
+        {/* 3D Roadmap Workspace */}
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-start max-w-6xl mx-auto">
+          {/* Interactive 3D Stack (Left/Center Column) */}
+          <div className="lg:col-span-5 flex flex-col items-center justify-center p-8 bg-[#fafafa] border border-[#eaeaea] rounded-2xl min-h-[500px] perspective-wrapper">
+            <h3 className="text-xs font-bold text-[#808080] uppercase tracking-wider mb-8 font-mono">
+              Hover & Drag cursor to rotate stack
+            </h3>
 
-              const quarterMilestones = q.milestones;
-              const completedCount = quarterMilestones.filter(
-                (m) => completedMilestones[`${q.id}-${m}`]
-              ).length;
-              const completionPercent = Math.round(
-                (completedCount / quarterMilestones.length) * 100
-              ) || 0;
+            {/* 3D Stack Container */}
+            <div
+              className="relative w-[280px] h-[360px] block-3d flex flex-col justify-end items-center"
+              style={{
+                transform: `rotateX(${tilt.x}deg) rotateY(${tilt.y}deg)`,
+                transformStyle: "preserve-3d",
+                transition: "transform 0.1s ease-out"
+              }}
+            >
+              {initialRoadmap.map((q, idx) => {
+                const isActive = q.id === selectedQuarterId;
+                const isCompleted = q.status === "completed";
+                const isCurrent = q.status === "current";
+                const completion = getQuarterCompletion(q);
+                
+                // Height based on completion (scales from 12px flat to 50px thick)
+                const thickness = 15 + completion * 35;
+                
+                // Color scaling
+                let blockColor = "#8B88F8"; // Lavender
+                if (isCompleted) blockColor = "#89F336"; // Green
+                else if (isCurrent) blockColor = "#8B88F8";
+                else blockColor = "#D8D8D8"; // Grey
 
-              return (
-                <button
-                  key={q.id}
-                  onClick={() => setSelectedQuarterId(q.id)}
-                  className={`w-full text-left p-5 rounded-xl border flex items-start gap-4 transition-all duration-200 cursor-pointer ${
-                    isActive 
-                      ? "border-[#8B88F8] bg-[#f5f5ff] shadow-sm" 
-                      : "bg-white border-[#eaeaea] hover:border-gray-300"
-                  }`}
-                >
-                  {/* Circle Indicator */}
-                  <span className="relative z-10 flex h-4 w-4 mt-1">
-                    {isCurrent && (
-                      <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-[#8B88F8] opacity-75"></span>
-                    )}
-                    <span
-                      className={`relative inline-flex h-4 w-4 rounded-full border ${
-                        isCompleted
-                          ? "bg-[#89F336] border-[#89F336]"
-                          : isCurrent
-                          ? "bg-[#8B88F8] border-[#8B88F8]"
-                          : "bg-white border-gray-300"
-                      }`}
-                    ></span>
-                  </span>
+                // Z-index layout offset
+                const zOffset = idx * 60;
 
-                  <div className="flex-grow space-y-1">
-                    <div className="flex items-center justify-between">
-                      <span className="text-[10px] uppercase font-bold text-gray-400 font-mono">
-                        {q.quarter}
-                      </span>
-                      <span
-                        className={`text-[9px] uppercase font-bold px-2 py-0.5 rounded ${
-                          isCompleted
-                            ? "bg-[#e8fcd7] text-[#2d5a08]"
-                            : isCurrent
-                            ? "bg-[#f5f5ff] text-[#8B88F8]"
-                            : "bg-gray-100 text-gray-400"
-                        }`}
-                      >
-                        {q.status}
-                      </span>
+                return (
+                  <div
+                    key={q.id}
+                    onClick={() => setSelectedQuarterId(q.id)}
+                    className="absolute cursor-pointer transition-all duration-300 ease-out"
+                    style={{
+                      transform: `translateZ(${zOffset}px) ${isActive ? "translateY(-15px) scale(1.05)" : ""}`,
+                      transformStyle: "preserve-3d",
+                      width: "180px",
+                      height: "120px",
+                    }}
+                  >
+                    {/* 3D Cube faces */}
+                    {/* Top Face */}
+                    <div
+                      className="absolute inset-0 border transition-all duration-300"
+                      style={{
+                        backgroundColor: blockColor,
+                        transform: `translateZ(${thickness}px)`,
+                        borderRadius: "10px",
+                        boxShadow: isActive ? "0 0 20px rgba(139,136,248,0.4)" : "0 5px 15px rgba(0,0,0,0.05)",
+                        borderColor: isActive ? "#FFFFFF" : "transparent"
+                      }}
+                    >
+                      <div className="p-3 text-white h-full flex flex-col justify-between">
+                        <span className="text-[9px] font-bold font-mono tracking-widest uppercase">
+                          {q.quarter}
+                        </span>
+                        <div>
+                          <h4 className="text-[10px] font-bold line-clamp-1">
+                            {q.title}
+                          </h4>
+                          <span className="text-[8px] opacity-75 font-mono">
+                            {Math.round(completion * 100)}% COMPLETE
+                          </span>
+                        </div>
+                      </div>
                     </div>
 
-                    <h4 className="text-sm font-bold text-[#111111]">
-                      {q.title}
-                    </h4>
+                    {/* Front Face */}
+                    <div
+                      className="absolute bottom-0 left-0 right-0 origin-bottom transition-all duration-300"
+                      style={{
+                        backgroundColor: isCompleted ? "#73D41E" : isCurrent ? "#726FE5" : "#B0B0B0",
+                        height: `${thickness}px`,
+                        transform: "rotateX(-90deg)",
+                        borderBottomLeftRadius: "10px",
+                        borderBottomRightRadius: "10px",
+                        opacity: 0.95
+                      }}
+                    />
 
-                    {/* Progress Bar */}
-                    <div className="w-full bg-gray-100 h-1.5 rounded-full overflow-hidden mt-3">
-                      <div
-                        className={`h-1.5 rounded-full ${
-                          isCompleted ? "bg-[#89F336]" : "bg-[#8B88F8]"
-                        }`}
-                        style={{ width: `${completionPercent}%` }}
-                      ></div>
-                    </div>
-                    <p className="text-[9px] text-gray-400 mt-1 text-right">
-                      {completedCount}/{quarterMilestones.length} checklist ({completionPercent}%)
-                    </p>
+                    {/* Right Face */}
+                    <div
+                      className="absolute top-0 bottom-0 right-0 origin-right transition-all duration-300"
+                      style={{
+                        backgroundColor: isCompleted ? "#5CB015" : isCurrent ? "#5956C8" : "#808080",
+                        width: `${thickness}px`,
+                        transform: "rotateY(90deg)",
+                        borderTopRightRadius: "10px",
+                        borderBottomRightRadius: "10px",
+                        opacity: 0.9
+                      }}
+                    />
                   </div>
-                </button>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
 
-          {/* Details Card (Right Column) */}
-          <div className="lg:col-span-2">
+          {/* Details & Milestone Checklist (Right Column) */}
+          <div className="lg:col-span-7">
             {selectedQuarter ? (
-              <div className="p-8 md:p-12 border border-[#eaeaea] bg-[#fafafa] rounded-2xl shadow-sm h-full flex flex-col justify-between animate-scale-up">
+              <div className="p-8 md:p-12 border border-[#eaeaea] bg-white rounded-2xl shadow-lg h-full flex flex-col justify-between animate-scale-up border-l-4" style={{ borderLeftColor: selectedQuarter.status === "completed" ? "#89F336" : "#8B88F8" }}>
                 <div className="space-y-6">
                   <div className="flex items-center justify-between pb-3 border-b border-[#eaeaea]">
                     <span className="text-xs font-bold text-[#8B88F8] font-mono uppercase tracking-widest">
-                      Milestone Logs &middot; {selectedQuarter.quarter}
+                      Milestone Tracker &middot; {selectedQuarter.quarter}
                     </span>
-                    <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-white border border-[#eaeaea] text-gray-500 capitalize">
+                    <span
+                      className={`px-3 py-0.5 rounded-full text-[10px] font-bold border uppercase ${
+                        selectedQuarter.status === "completed"
+                          ? "bg-green-50 border-green-200 text-green-700"
+                          : selectedQuarter.status === "current"
+                          ? "bg-blue-50 border-blue-200 text-blue-700"
+                          : "bg-gray-50 border-gray-200 text-gray-500"
+                      }`}
+                    >
                       {selectedQuarter.status}
                     </span>
                   </div>
 
-                  <h3 className="text-2xl font-extrabold text-[#111111]">
+                  <h3 className="text-3xl font-extrabold text-[#111111] tracking-tight">
                     {selectedQuarter.title}
                   </h3>
                   
@@ -174,8 +222,8 @@ export default function RoadmapPageClient({ initialRoadmap }: RoadmapPageClientP
                   </p>
 
                   <div className="pt-4">
-                    <span className="text-xs font-bold uppercase tracking-wider text-[#111111] block mb-4">
-                      Interactive Milestone Checklist:
+                    <span className="text-xs font-bold uppercase tracking-wider text-[#111111] block mb-4 font-mono">
+                      Milestones Checklist:
                     </span>
                     
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
@@ -185,18 +233,18 @@ export default function RoadmapPageClient({ initialRoadmap }: RoadmapPageClientP
                           <div
                             key={milestone}
                             onClick={() => toggleMilestone(selectedQuarter.id, milestone)}
-                            className={`p-4 rounded-xl border transition-all cursor-pointer flex items-center justify-between gap-3 bg-white ${
+                            className={`p-4 rounded-xl border transition-all cursor-pointer flex items-center justify-between gap-3 bg-[#fafafa] ${
                               isDone
-                                ? "border-[#89F336] text-[#2d5a08] shadow-xs"
+                                ? "border-[#89F336] text-[#2d5a08] bg-[#f4fdeb]"
                                 : "border-[#eaeaea] text-gray-500 hover:border-gray-300"
                             }`}
                           >
-                            <span className="text-xs font-medium">{milestone}</span>
+                            <span className="text-xs font-semibold leading-snug">{milestone}</span>
                             <div
-                              className={`h-5 w-5 rounded border flex items-center justify-center transition-all ${
+                              className={`h-5 w-5 rounded border flex items-center justify-center shrink-0 transition-all ${
                                 isDone
                                   ? "bg-[#89F336] border-[#89F336] text-[#111111]"
-                                  : "border-gray-200"
+                                  : "border-gray-300 bg-white"
                               }`}
                             >
                               {isDone && (
@@ -213,13 +261,13 @@ export default function RoadmapPageClient({ initialRoadmap }: RoadmapPageClientP
                 </div>
 
                 <div className="mt-8 pt-6 border-t border-[#eaeaea] text-[10px] text-gray-400 font-mono flex justify-between">
-                  <span>SYSTEM: LOGGED</span>
-                  <span>INDEXING SHARDS: OK</span>
+                  <span>SHARDS STATUS: SYNCHRONIZED</span>
+                  <span>COMPLETION: {Math.round(getQuarterCompletion(selectedQuarter) * 100)}%</span>
                 </div>
               </div>
             ) : (
-              <div className="p-12 text-center text-gray-400 border border-[#eaeaea] bg-[#fafafa] rounded-2xl">
-                Please select a Quarter from the left timeline to review milestones.
+              <div className="p-12 text-center text-gray-400 border border-[#eaeaea] bg-white rounded-2xl shadow-sm">
+                Select a layer from the 3D stack on the left to verify milestones.
               </div>
             )}
           </div>
@@ -228,3 +276,4 @@ export default function RoadmapPageClient({ initialRoadmap }: RoadmapPageClientP
     </div>
   );
 }
+

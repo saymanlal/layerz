@@ -43,8 +43,8 @@ export default function ThreeDBlockBg({ colorType = "default", opacity = 0.85 }:
       mouseRef.current.y = -1000;
     };
 
-    canvas.addEventListener("mousemove", handleMouseMove);
-    canvas.addEventListener("mouseleave", handleMouseLeave);
+    window.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseleave", handleMouseLeave);
 
     // Grid configuration
     const size = 35; // Size of isometric half-width
@@ -178,10 +178,8 @@ export default function ThreeDBlockBg({ colorType = "default", opacity = 0.85 }:
     return () => {
       cancelAnimationFrame(animationFrameId);
       window.removeEventListener("resize", handleResize);
-      if (canvas) {
-        canvas.removeEventListener("mousemove", handleMouseMove);
-        canvas.removeEventListener("mouseleave", handleMouseLeave);
-      }
+      window.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseleave", handleMouseLeave);
     };
   }, [colorType]);
 

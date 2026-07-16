@@ -2,30 +2,35 @@ import fs from "fs";
 import path from "path";
 
 export async function getEcosystemData<T>(fileName: string): Promise<T[]> {
-  const repo = process.env.GITHUB_REPO;
+  const repo = process.env.GITHUB_REPO || "saymanlal/layerz-data";
   const pat = process.env.GITHUB_PAT;
   const branch = process.env.GITHUB_BRANCH || "main";
 
-  // If credentials exist, attempt fetching from GitHub for real-time updates on Vercel
-  if (repo && pat) {
-    try {
-      const url = `https://api.github.com/repos/${repo}/contents/src/data/${fileName}?ref=${branch}`;
-      
-      const res = await fetch(url, {
-        headers: {
-          "Authorization": `token ${pat}`,
-          "Accept": "application/vnd.github.v3.raw",
-          "User-Agent": "Layerz-App"
-        },
-        next: { revalidate: 15 } // revalidate cache every 15 seconds
-      });
+  // If PAT exists, fetch from GitHub for real-time updates on Vercel
+  if (pat) {
+    // Try root of data repo first, then src/data/
+    const pathsToTry = [fileName, `src/data/${fileName}`];
+    
+    for (const filePath of pathsToTry) {
+      try {
+        const url = `https://api.github.com/repos/${repo}/contents/${filePath}?ref=${branch}`;
+        
+        const res = await fetch(url, {
+          headers: {
+            "Authorization": `token ${pat}`,
+            "Accept": "application/vnd.github.v3.raw",
+            "User-Agent": "Layerz-App"
+          },
+          next: { revalidate: 15 } // cache for 15 seconds to avoid limit exhaust
+        });
 
-      if (res.status === 200) {
-        const text = await res.text();
-        return JSON.parse(text) as T[];
+        if (res.status === 200) {
+          const text = await res.text();
+          return JSON.parse(text) as T[];
+        }
+      } catch (err) {
+        console.error(`Failed to fetch ${filePath} from GitHub:`, err);
       }
-    } catch (err) {
-      console.error(`Failed to fetch ${fileName} from GitHub, falling back to local filesystem:`, err);
     }
   }
 
@@ -49,3 +54,4 @@ export async function getEcosystemData<T>(fileName: string): Promise<T[]> {
     return [] as T[];
   }
 }
+

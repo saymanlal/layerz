@@ -8,17 +8,11 @@ export default function Footer() {
           {/* Brand block */}
           <div className="md:col-span-2 space-y-4">
             <Link href="/" className="group flex items-center gap-3">
-              <svg width="28" height="28" viewBox="0 0 34 34" fill="none">
-                <path d="M17 31.5L4 25L17 18.5L30 25L17 31.5Z" fill="#89F336" opacity="0.85" />
-                <path d="M4 25V28L17 34.5V31.5L4 25Z" fill="#73D41E" />
-                <path d="M30 25V28L17 34.5V31.5L30 25Z" fill="#5CB015" />
-                <path d="M17 21.5L4 15L17 8.5L30 15L17 21.5Z" fill="#8B88F8" opacity="0.85" />
-                <path d="M4 15V18L17 24.5V21.5L4 15Z" fill="#726FE5" />
-                <path d="M30 15V18L17 24.5V21.5L30 15Z" fill="#5956C8" />
-                <path d="M17 11.5L4 5L17 -1.5L30 5L17 11.5Z" fill="#FFFFFF" />
-                <path d="M4 5V8L17 14.5V11.5L4 5Z" fill="#EAEAEA" />
-                <path d="M30 5V8L17 14.5V11.5L30 5Z" fill="#B0B0B0" />
-              </svg>
+              <img
+                src="/logo-org.jpg"
+                alt="Layerz Logo"
+                className="h-8 w-8 rounded object-contain bg-white border border-[#eaeaea]"
+              />
               <span className="text-xl font-bold tracking-tight text-white">
                 Layerz<span className="text-[#89F336]">.</span>
               </span>
